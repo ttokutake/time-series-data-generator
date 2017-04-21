@@ -3,10 +3,16 @@
   "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "test": "jest"
+  },
   "dependencies": {
     "faker": "^4.1.0",
     "immutable": "^3.8.1",
     "is_js": "^0.9.0",
     "moment": "^2.18.1"
+  },
+  "devDependencies": {
+    "jest": "^19.0.2"
   }
 }
