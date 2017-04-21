@@ -1,0 +1,10 @@
+{
+  "name": "dummy-json-generator",
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "faker": "^4.1.0",
+    "immutable": "^3.8.1"
+  }
+}
