@@ -21,7 +21,7 @@ test('RatioMap.randomKey() return null', () => {
   expect(ratioMap.randomKey()).toBeNull();
 });
 
-test('RaoMap.constructor() throw error', () => {
+test('RatioMap.validate() throw error', () => {
   const ratios = [
     {a: undefined},
     {a: null     },
@@ -31,7 +31,7 @@ test('RaoMap.constructor() throw error', () => {
   ];
 
   for (ratio of ratios) {
-    expect(() => new RatioMap(ratio)).toThrow(/v_i/);
+    expect(() => RatioMap.validate(ratio)).toThrow(/v_i/);
   }
 });
 
