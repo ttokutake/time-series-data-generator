@@ -3,7 +3,7 @@ const {
   isNotInstanceOf,
   isPair,
   isNotPair,
-} = require('./type');
+} = require('../lib/type');
 
 test('isPair() should return true and isNotPair() should do false', () => {
   const input = [1, 2];

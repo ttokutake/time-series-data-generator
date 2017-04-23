@@ -1,4 +1,4 @@
-const {RatioMap} = require('./ratio_map');
+const {RatioMap} = require('../lib/ratio_map');
 
 test('RatioMap.randomKey() return some key', () => {
   const numOfTrails = 10;

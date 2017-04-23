@@ -1,6 +1,6 @@
 const {
   randomInt,
-} = require('./random');
+} = require('../lib/random');
 
 const {Range} = require('immutable');
 
