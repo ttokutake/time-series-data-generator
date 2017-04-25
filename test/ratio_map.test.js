@@ -2,6 +2,7 @@ const {RatioMap} = require('../lib/ratio_map');
 
 const {Range} = require('immutable');
 
+// Todo: Use "jsverify"
 test('RatioMap.randomKey() return some key', () => {
   const numOfTrails = 10;
   const data        = [

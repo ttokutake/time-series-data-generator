@@ -2,42 +2,25 @@ const {
   randomInt,
 } = require('../lib/random');
 
-const {Range} = require('immutable');
+const is  = require('is_js');
+const jsc = require('jsverify');
 
 test('randomInt() should return integer between range of min and max', () => {
-  const numOfTrails = 10;
-  const inputs      = [
-    [-2, -1],
-    [-1, -1],
-    [-1,  0],
-    [-1,  1],
-    [ 0,  0],
-    [ 0,  1],
-    [ 1,  1],
-    [ 1,  2],
-  ];
-
-  Range(1, numOfTrails).forEach((_) => {
-    for ([min, max] of inputs) {
-      const result = randomInt(min, max);
-      expect(result).toBeGreaterThanOrEqual(min);
-      expect(result).toBeLessThanOrEqual(max);
-    }
+  const returnRandomValueGteMinAndLteMax = jsc.forall(jsc.integer(), jsc.integer(0, 100), (min, diff) => {
+    const max    = min + diff;
+    const result = randomInt(min, max);
+    return min <= result && result <= max;
   });
+  jsc.assert(returnRandomValueGteMinAndLteMax);
 });
 
 test('randomInt() should return null', () => {
-  const inputs = [
-    [-1, -2],
-    [ 0, -1],
-    [ 1, -1],
-    [ 1,  0],
-    [ 2,  1],
-  ];
-
-  for ([min, max] of inputs) {
-    expect(randomInt(min, max)).toBeNull();
-  }
+  const returnNull = jsc.forall(jsc.integer(), jsc.integer(1, 100), (min, diff) => {
+    const max    = min - diff;
+    const result = randomInt(min, max);
+    return is.null(result);
+  });
+  jsc.assert(returnNull);
 });
 
 test('randomInt() should throw Error', () => {
