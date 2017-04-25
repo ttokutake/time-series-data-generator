@@ -6,7 +6,7 @@ const is  = require('is_js');
 const jsc = require('jsverify');
 
 test('randomInt() should return integer between range of min and max', () => {
-  const returnRandomValueGteMinAndLteMax = jsc.forall(jsc.integer(), jsc.integer(0, 100), (min, diff) => {
+  const returnRandomValueGteMinAndLteMax = jsc.forall(jsc.integer(), jsc.nat(), (min, diff) => {
     const max    = min + diff;
     const result = randomInt(min, max);
     return min <= result && result <= max;
