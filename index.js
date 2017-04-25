@@ -29,7 +29,7 @@ const commentsReqGenerator = new CrudReqGenerator({resource: 'comments', methodR
 const numOfLines    = 10;
 const numOfUsers    = 100;
 const reqGenerators = [reqGenerator, productsReqGenerator, commentsReqGenerator];
-const dateRange     = [new Date(), new Date()];
+const dateRange     = {start: new Date(), end: new Date()};
 const accessLog     = dummyAccessLog({numOfLines, numOfUsers, reqGenerators, dateRange});
 
 console.log(JSON.stringify(accessLog));

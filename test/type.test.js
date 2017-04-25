@@ -1,32 +1,32 @@
 const {
+  isDateRange,
+  isNotDateRange,
   isInstanceOf,
   isNotInstanceOf,
-  isPair,
-  isNotPair,
 } = require('../lib/type');
 
-test('isPair() should return true and isNotPair() should do false', () => {
-  const input = [1, 2];
 
-  expect(isPair(input)   ).toBeTruthy();
-  expect(isNotPair(input)).toBeFalsy();
+test('isDateRange() should return true and isNotDateRange() should do false', () => {
+  const input = {start: new Date(), end: new Date()};
+
+  expect(isDateRange(input)   ).toBeTruthy();
+  expect(isNotDateRange(input)).toBeFalsy();
 });
 
-test('isPair() should return false and isNotPair() should do true', () => {
+test('isDateRange() should return false and isNotDateRange() should do true', () => {
   const inputs = [
     undefined,
     null,
     0,
     '',
     [],
-    [1],
-    [1, 2, 3],
-    {},
+    {start: new Date()},
+    {end  : new Date()},
   ];
 
   for (const input of inputs) {
-    expect(isPair(input)   ).toBeFalsy();
-    expect(isNotPair(input)).toBeTruthy();
+    expect(isDateRange(input)   ).toBeFalsy();
+    expect(isNotDateRange(input)).toBeTruthy();
   }
 });
 
