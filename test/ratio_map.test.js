@@ -1,29 +1,30 @@
 const {RatioMap} = require('../lib/ratio_map');
 
-const {Range} = require('immutable');
+const escapeRegExp = require('escape-string-regexp');
+const {Map}        = require('immutable');
+const is           = require('is_js');
+const jsc          = require('jsverify');
 
-// Todo: Use "jsverify"
 test('RatioMap.randomKey() return some key', () => {
-  const numOfTrails = 10;
-  const data        = [
-    [{a: 1}      , /^a$/    ],
-    [{a: 1, b: 0}, /^a$/    ],
-    [{a: 1, b: 1}, /^(a|b)$/],
-    [{a: 2, b: 1}, /^(a|b)$/],
-    [{a: 1, b: 2}, /^(a|b)$/],
-  ];
+  const posInteger = jsc.integer(1, 10000);
+  jsc.assertForall(jsc.nearray(jsc.pair(jsc.asciistring, posInteger)), (data) => {
+    const input       = data.reduce((map, [key, ratio]) => map.set(key, ratio), Map()).toJSON();
+    const regExpCores = data.filter(([_, ratio]) => ratio > 0)
+      .map(([key, _]) => escapeRegExp(key));
+    const regExp = new RegExp(`^(${regExpCores.join('|')})$`);
 
-  Range(0, numOfTrails).forEach((_) => {
-    for ([ratio, expected] of data) {
-      const ratioMap = new RatioMap(ratio);
-      expect(ratioMap.randomKey()).toMatch(expected);
-    }
+    const ratioMap = new RatioMap(input);
+    return is.not.null(ratioMap.randomKey().match(regExp));
   });
 });
 
 test('RatioMap.randomKey() return null', () => {
-  const ratioMap = new RatioMap({a: 0});
-  expect(ratioMap.randomKey()).toBeNull();
+  jsc.assertForall(jsc.nearray(jsc.pair(jsc.asciistring, jsc.integer(0))), (data) => {
+    const input = data.reduce((map, [key, ratio]) => map.set(key, ratio), Map()).toJSON();
+
+    const ratioMap = new RatioMap(input);
+    return is.null(ratioMap.randomKey());
+  });
 });
 
 test('RatioMap.validate() throw error', () => {

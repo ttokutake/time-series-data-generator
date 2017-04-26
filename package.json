@@ -14,6 +14,7 @@
     "moment": "^2.18.1"
   },
   "devDependencies": {
+    "escape-string-regexp": "^1.0.5",
     "jest": "^19.0.2",
     "jsverify": "^0.8.2"
   }

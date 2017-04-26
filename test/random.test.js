@@ -15,10 +15,10 @@ test('randomInt() should return integer between range of min and max', () => {
 
 test('randomInt() should return null', () => {
   jsc.assertForall(jsc.integer(), jsc.integer(), (x, y) => {
-    const [min, max] = x < y ? [y, x] : [x, y];
-    if (min === max) {
+    if (x === y) {
       return true;
     }
+    const [min, max] = x < y ? [y, x] : [x, y];
     const result = randomInt(min, max);
     return is.null(result);
   });
