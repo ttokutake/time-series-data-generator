@@ -6,19 +6,20 @@ const jsc   = require('jsverify');
 
 test('RatioMap.randomKey() return some key', () => {
   const posInteger = jsc.integer(1, 10000);
-  jsc.assertForall(jsc.nearray(jsc.pair(jsc.asciistring, posInteger)), (data) => {
-    const input      = data.reduce((map, [key, ratio]) => map.set(key, ratio), Map()).toJSON();
-    const candidates = data.filter(([_, ratio]) => ratio > 0).map(([key, _]) => key);
+  jsc.assertForall(jsc.dict(posInteger), (input) => {
+    if (is.empty(input)) {
+      return true;
+    }
+    const candidates = Map(input).keySeq();
 
-    const result = new RatioMap(input).randomKey();
+    const ratioMap = new RatioMap(input);
+    const result   = ratioMap.randomKey();
     return candidates.some((c) => c === result);
   });
 });
 
 test('RatioMap.randomKey() return null', () => {
-  jsc.assertForall(jsc.nearray(jsc.pair(jsc.asciistring, jsc.integer(0))), (data) => {
-    const input = data.reduce((map, [key, ratio]) => map.set(key, ratio), Map()).toJSON();
-
+  jsc.assertForall(jsc.dict(jsc.integer(0)), (input) => {
     const ratioMap = new RatioMap(input);
     return is.null(ratioMap.randomKey());
   });
