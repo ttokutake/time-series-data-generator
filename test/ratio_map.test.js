@@ -1,4 +1,4 @@
-const {RatioMap} = require('../lib/ratio_map');
+const RatioMap = require('../lib/ratio_map');
 
 const {Map} = require('immutable');
 const is    = require('is_js');
