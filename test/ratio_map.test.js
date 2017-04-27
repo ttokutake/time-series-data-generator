@@ -4,9 +4,12 @@ const {Map} = require('immutable');
 const is    = require('is_js');
 const jsc   = require('jsverify');
 
+const {
+  jscPosInteger,
+} = require('./util');
+
 test('RatioMap.randomKey() return some key', () => {
-  const posInteger = jsc.integer(1, 10000);
-  jsc.assertForall(jsc.dict(posInteger), (input) => {
+  jsc.assertForall(jsc.dict(jscPosInteger), (input) => {
     if (is.empty(input)) {
       return true;
     }

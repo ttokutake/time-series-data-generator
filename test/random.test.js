@@ -19,7 +19,7 @@ test('randomInt() should return null', () => {
       return true;
     }
     const [min, max] = x < y ? [y, x] : [x, y];
-    const result = randomInt(min, max);
+    const result     = randomInt(min, max);
     return is.null(result);
   });
 });
