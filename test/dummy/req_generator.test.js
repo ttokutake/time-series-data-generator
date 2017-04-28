@@ -3,10 +3,11 @@ const {
 } = require('../../lib/dummy/req_generator');
 
 const {
+  is: areEqual,
   List,
   Map,
 } = require('immutable');
-const jsc   = require('jsverify');
+const jsc = require('jsverify');
 
 const {
   jscPosInteger,
@@ -33,6 +34,7 @@ test('ReqGenerator.randomRequest() should return some CRUD request', () => {
     ratio      : jscPosInteger,
     statusRatio: statusRatioGenerator,
   }));
+
   jsc.assertForall(inputGenerator, (input) => {
     const list = List(input);
     const methodCandidates = list.map(({method}) => method)
@@ -44,4 +46,21 @@ test('ReqGenerator.randomRequest() should return some CRUD request', () => {
       && pathCandidates.some((p) => p === path)
       && statusCandidates.some((s) => s === status);
   });
+});
+
+test('ReqGenerator.randomRequest() should return default request', () => {
+  const inputs = [
+    [],
+    [{method: 'HEAD', path: '/index.html', ratio: 0, statusRatio: {200: 1}}],
+  ];
+
+  for (const input of inputs) {
+    expect(new ReqGenerator(input).randomRequest()).toEqual(ReqGenerator.defaultRequest());
+  }
+});
+
+test('ReqGenerator.randomRequest() should return request with empty status', () => {
+  const input = [{method: 'HEAD', path: '/index.html', ratio: 1, statusRatio: {}}];
+
+  expect(new ReqGenerator(input).randomRequest()).toEqual({method: 'HEAD', path: '/index.html', status: '-'});
 });
