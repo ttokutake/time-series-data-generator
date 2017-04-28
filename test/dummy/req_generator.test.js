@@ -38,11 +38,8 @@ test('ReqGenerator.randomRequest() should return some CRUD request', () => {
     const methodCandidates = list.map(({method}) => method)
     const pathCandidates   = list.map(({path}  ) => path)
 
-    const reqGenerator = new ReqGenerator(input);
-    const result       = reqGenerator.randomRequest();
-    const method       = result.get('method');
-    const path         = result.get('path');
-    const status       = result.get('status');
+    const reqGenerator           = new ReqGenerator(input);
+    const {method, path, status} = reqGenerator.randomRequest();
     return methodCandidates.some((m) => m === method)
       && pathCandidates.some((p) => p === path)
       && statusCandidates.some((s) => s === status);
