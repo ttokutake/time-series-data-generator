@@ -1,6 +1,6 @@
 const jsc = require('jsverify')
 
-const jscPosInteger = jsc.integer(1, 10000);
+const jscPosInteger = jsc.nat.smap((x) => x + 1, (x) => x - 1);
 
 module.exports = {
   jscPosInteger,
