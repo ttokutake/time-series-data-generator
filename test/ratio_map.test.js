@@ -8,7 +8,7 @@ const {
   jscPosInteger,
 } = require('./util');
 
-test('RatioMap.randomKey() return some key', () => {
+test('RatioMap.randomKey() should return some key', () => {
   jsc.assertForall(jsc.dict(jscPosInteger), (input) => {
     if (is.empty(input)) {
       return true;
@@ -21,14 +21,14 @@ test('RatioMap.randomKey() return some key', () => {
   });
 });
 
-test('RatioMap.randomKey() return null', () => {
+test('RatioMap.randomKey() should return null', () => {
   jsc.assertForall(jsc.dict(jsc.integer(0)), (input) => {
     const ratioMap = new RatioMap(input);
     return is.null(ratioMap.randomKey());
   });
 });
 
-test('RatioMap.validate() throw error', () => {
+test('RatioMap.validate() should throw Error', () => {
   const ratios = [
     {a: undefined},
     {a: null     },
