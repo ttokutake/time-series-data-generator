@@ -3,6 +3,7 @@ const {
   ReqGenerator,
 } = require('../../lib/dummy/req_generator');
 
+const escapeRegExp = require('escape-string-regexp');
 const {
   is: areEqual,
   List,
@@ -29,15 +30,14 @@ const statusRatioGenerator = jsc.record(statusRatio);
 const statusCandidates     = Map(statusRatio).keySeq().toList();
 
 describe('ReqGenerator', () => {
-
-  const reqParamBase = Map({
-    method     : 'HEAD',
-    path       : '/index.html',
-    ratio      : 1,
-    statusRatio: {200: 1},
-  });
-
   test('constructor() should throw Error', () => {
+    const reqParamBase = Map({
+      method     : 'HEAD',
+      path       : '/index.html',
+      ratio      : 1,
+      statusRatio: {200: 1},
+    });
+
     const inputs = [
       undefined,
       null,
@@ -109,8 +109,7 @@ describe('ReqGenerator', () => {
   test('randomRequest() should return default request', () => {
     const inputs = [
       [],
-      [reqParamBase.set('ratio', 0).toJSON()],
-      [reqParamBase.set('ratio', 0).toJSON(), reqParamBase.set('ratio', 0).toJSON()],
+      [{method: 'HEAD', path: '/index.html', ratio: 0, statusRatio: {200: 1}}],
     ];
 
     for (const input of inputs) {
@@ -119,25 +118,24 @@ describe('ReqGenerator', () => {
   });
 
   test('randomRequest() should return request with empty status', () => {
-    const input = [reqParamBase.set('statusRatio', {}).toJSON()];
+    const input = [{method: 'HEAD', path: '/index.html', ratio: 1, statusRatio: {}}];
 
     expect(new ReqGenerator(input).randomRequest()).toEqual({method: 'HEAD', path: '/index.html', status: '-'});
   });
 });
 
 describe('CrudReqGenerator', () => {
-
-  const reqParamBase = Map({
-    resource   : 'users',
-    methodRatio: Map({
-      POST  : Map({ratio: 1, statusRatio: {201: 1}}),
-      GET   : Map({ratio: 1, statusRatio: {200: 1}}),
-      PUT   : Map({ratio: 1, statusRatio: {200: 1}}),
-      DELETE: Map({ratio: 1, statusRatio: {204: 1}}),
-    }),
-  });
-
   test('constructor() should throw Error', () => {
+    const reqParamBase = Map({
+      resource   : 'users',
+      methodRatio: Map({
+        POST  : Map({ratio: 1, statusRatio: {201: 1}}),
+        GET   : Map({ratio: 1, statusRatio: {200: 1}}),
+        PUT   : Map({ratio: 1, statusRatio: {200: 1}}),
+        DELETE: Map({ratio: 1, statusRatio: {204: 1}}),
+      }),
+    });
+
     const inputs = [
       undefined,
       null,
@@ -215,6 +213,62 @@ describe('CrudReqGenerator', () => {
 
     for (const input of inputs) {
       expect(() => new CrudReqGenerator(input)).toThrow();
+    }
+  });
+
+  test('randomRequest() should return some crud request', () => {
+    const inputGenerator = jsc.record({
+      resource   : jsc.string,
+      methodRatio: jsc.record({
+        POST  : jsc.record({ratio: jscPosInteger, statusRatio: statusRatioGenerator}),
+        GET   : jsc.record({ratio: jscPosInteger, statusRatio: statusRatioGenerator}),
+        PUT   : jsc.record({ratio: jscPosInteger, statusRatio: statusRatioGenerator}),
+        DELETE: jsc.record({ratio: jscPosInteger, statusRatio: statusRatioGenerator}),
+      }),
+    });
+
+    jsc.assertForall(inputGenerator, jsc.string, (input, id) => {
+      const pathRegExp       = new RegExp(`^/v1/${escapeRegExp(input.resource)}(/${escapeRegExp(id)})?`);
+      const methodCandidates = ['POST', 'GET', 'PUT', 'DELETE'];
+
+      const crudReqGenerator       = new CrudReqGenerator(input);
+      const {method, path, status} = crudReqGenerator.randomRequest(id);
+      return methodCandidates.some((m) => m === method)
+        && path.match(pathRegExp)
+        && statusCandidates.some((s) => s === status);
+    });
+  });
+
+  test('randomRequest() should return default request', () => {
+    const inputs = [
+      {resource: 'users', methodRatio: {}                                         },
+      {resource: 'users', methodRatio: {POST  : {ratio: 0, statusRatio: {201: 1}}}},
+      {resource: 'users', methodRatio: {GET   : {ratio: 0, statusRatio: {200: 1}}}},
+      {resource: 'users', methodRatio: {PUT   : {ratio: 0, statusRatio: {200: 1}}}},
+      {resource: 'users', methodRatio: {DELETE: {ratio: 0, statusRatio: {204: 1}}}},
+    ];
+
+    for (const input of inputs) {
+      expect(new CrudReqGenerator(input).randomRequest('id')).toEqual(CrudReqGenerator.defaultRequest());
+    }
+  });
+
+  test('randomRequest() should return crud request with empty status', () => {
+    const inputs = [
+      {resource: 'users', methodRatio: {POST  : {ratio: 1, statusRatio: {}}}},
+      {resource: 'users', methodRatio: {GET   : {ratio: 1, statusRatio: {}}}},
+      {resource: 'users', methodRatio: {PUT   : {ratio: 1, statusRatio: {}}}},
+      {resource: 'users', methodRatio: {DELETE: {ratio: 1, statusRatio: {}}}},
+    ];
+    const expects = [
+      {method: 'POST'  , path: '/v1/users'   , status: '-'},
+      {method: 'GET'   , path: '/v1/users/id', status: '-'},
+      {method: 'PUT'   , path: '/v1/users/id', status: '-'},
+      {method: 'DELETE', path: '/v1/users/id', status: '-'},
+    ];
+
+    for (const [input, expected] of List(inputs).zip(expects).toJSON()) {
+      expect(new CrudReqGenerator(input).randomRequest('id')).toEqual(expected);
     }
   });
 });
