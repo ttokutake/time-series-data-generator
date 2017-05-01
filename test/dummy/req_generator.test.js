@@ -67,6 +67,7 @@ describe('ReqGenerator', () => {
 
       [reqParamBase.set('ratio', undefined).toJSON()],
       [reqParamBase.set('ratio', null     ).toJSON()],
+      [reqParamBase.set('ratio', -1       ).toJSON()],
       [reqParamBase.set('ratio', '0'      ).toJSON()],
       [reqParamBase.set('ratio', []       ).toJSON()],
       [reqParamBase.set('ratio', {}       ).toJSON()],
