@@ -70,9 +70,12 @@ describe('UserGenerator', () => {
         normal   : jsc.nat(),
       }),
     });
-    jsc.assertForall(inputGenerator, (input) => {
+    jsc.forall(inputGenerator, (input) => {
       const user = Map(new UserGenerator(input).randomUser());
-      return user.has('email') && user.has('uuid') && user.has('userAgent') && user.has('ipAddress');
+      jsc.assert(user.has('email'    ));
+      jsc.assert(user.has('uuid'     ));
+      jsc.assert(user.has('userAgent'));
+      jsc.assert(user.has('ipAddress'));
     });
   });
 
@@ -83,9 +86,12 @@ describe('UserGenerator', () => {
         anonymous: jscPosInteger,
       }),
     });
-    jsc.assertForall(inputGenerator, (input) => {
+    jsc.forall(inputGenerator, (input) => {
       const user = Map(new UserGenerator(input).randomUser());
-      return user.get('email') === '-' && is.null(user.get('uuid')) && user.has('userAgent') && user.has('ipAddress');
+      jsc.assert(user.get('email') === '-');
+      jsc.assert(is.null(user.get('uuid')));
+      jsc.assert(user.has('userAgent'));
+      jsc.assert(user.has('ipAddress'));
     });
   });
 
@@ -102,12 +108,17 @@ describe('UserGenerator', () => {
         normal   : jsc.nat(),
       }),
     });
-    jsc.assertForall(inputGenerator, (input) => {
+    jsc.forall(inputGenerator, (input) => {
       const users = new UserGenerator(input)
         .all()
         .map((user) => Map(user));
-      const sizeIsCorrect   = users.length === input.num;
-      const allElemsAreUser = users.every((user) => user.has('email') && user.has('uuid') && user.has('userAgent') && user.has('ipAddress'));
+      jsc.assert(users.length === input.num);
+      for (const user of users) {
+        jsc.assert(user.has('email'    ));
+        jsc.assert(user.has('uuid'     ));
+        jsc.assert(user.has('userAgent'));
+        jsc.assert(user.has('ipAddress'));
+      };
       return sizeIsCorrect && allElemsAreUser;
     });
   });
