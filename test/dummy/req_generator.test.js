@@ -101,9 +101,9 @@ describe('ReqGenerator', () => {
 
       const reqGenerator           = new ReqGenerator(input);
       const {method, path, status} = reqGenerator.randomRequest();
-      jsc.assert(methodCandidates.some((m) => m === method));
-      jsc.assert(pathCandidates  .some((p) => p === path  ));
-      jsc.assert(statusCandidates.some((s) => s === status));
+      jsc.assert(methodCandidates.includes(method));
+      jsc.assert(pathCandidates  .includes(path  ));
+      jsc.assert(statusCandidates.includes(status));
     });
   });
 
@@ -234,9 +234,9 @@ describe('CrudReqGenerator', () => {
 
       const crudReqGenerator       = new CrudReqGenerator(input);
       const {method, path, status} = crudReqGenerator.randomRequest(id);
-      jsc.assert(methodCandidates.some((m) => m === method));
-      jsc.assert(path.match(pathRegExp)                    );
-      jsc.assert(statusCandidates.some((s) => s === status));
+      jsc.assert(methodCandidates.includes(method));
+      jsc.assert(path.match(pathRegExp)           );
+      jsc.assert(statusCandidates.includes(status));
     });
   });
 

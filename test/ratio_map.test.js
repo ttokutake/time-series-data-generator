@@ -17,7 +17,7 @@ test('RatioMap.randomKey() should return some key', () => {
 
     const ratioMap = new RatioMap(input);
     const result   = ratioMap.randomKey();
-    return candidates.some((c) => c === result);
+    return candidates.includes(result);
   });
 });
 
