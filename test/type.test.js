@@ -1,34 +1,7 @@
 const {
-  isDateRange,
-  isNotDateRange,
   isInstanceOf,
   isNotInstanceOf,
 } = require('../lib/type');
-
-
-test('isDateRange() should return true and isNotDateRange() should do false', () => {
-  const input = {start: new Date(), end: new Date()};
-
-  expect(isDateRange(input)   ).toBeTruthy();
-  expect(isNotDateRange(input)).toBeFalsy();
-});
-
-test('isDateRange() should return false and isNotDateRange() should do true', () => {
-  const inputs = [
-    undefined,
-    null,
-    0,
-    '',
-    [],
-    {start: new Date()},
-    {end  : new Date()},
-  ];
-
-  for (const input of inputs) {
-    expect(isDateRange(input)   ).toBeFalsy();
-    expect(isNotDateRange(input)).toBeTruthy();
-  }
-});
 
 
 class Class {

@@ -5,6 +5,7 @@ const {
   CrudReqGenerator,
 } = require('./lib/dummy/req_generator');
 const UserGenerator = require('./lib/dummy/user_generator');
+const DateGenerator = require('./lib/dummy/date_generator');
 
 seed(1);
 
@@ -30,7 +31,7 @@ const commentsReqGenerator = new CrudReqGenerator({resource: 'comments', methodR
 const numOfLines    = 10;
 const userGenerator = new UserGenerator({num: 100, typeRatio: {anonymous: 7, normal: 3}});
 const reqGenerators = [reqGenerator, productsReqGenerator, commentsReqGenerator];
-const dateRange     = {start: new Date(), end: new Date()};
-const accessLog     = dummyAccessLog({numOfLines, userGenerator, reqGenerators, dateRange});
+const dateGenerator = new DateGenerator();
+const accessLog     = dummyAccessLog({numOfLines, userGenerator, reqGenerators, dateGenerator});
 
 console.log(JSON.stringify(accessLog));
