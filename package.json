@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "jest": "^19.0.2",
-    "jsverify": "^0.8.2"
+    "jsverify": "^0.8.2",
+    "mockdate": "^2.0.1"
   }
 }
