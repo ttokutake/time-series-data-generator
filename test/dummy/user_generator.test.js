@@ -24,35 +24,40 @@ describe('UserGenerator', () => {
     const inputs = [
       undefined,
       null,
+      false,
       0,
-      '0',
+      0.1,
+      '',
       [],
 
       userParamBase.set('num', undefined).toJS(),
       userParamBase.set('num', null     ).toJS(),
+      userParamBase.set('num', false    ).toJS(),
       userParamBase.set('num', -1       ).toJS(),
-      userParamBase.set('num', '0'      ).toJS(),
+      userParamBase.set('num', 0.1      ).toJS(),
+      userParamBase.set('num', ''       ).toJS(),
       userParamBase.set('num', []       ).toJS(),
       userParamBase.set('num', {}       ).toJS(),
       userParamBase.delete('num')        .toJS(),
 
-      userParamBase.set('typeRatio', null        ).toJS(),
+      userParamBase.set('typeRatio', false       ).toJS(),
       userParamBase.set('typeRatio', 0           ).toJS(),
-      userParamBase.set('typeRatio', '0'         ).toJS(),
+      userParamBase.set('typeRatio', 0.1         ).toJS(),
+      userParamBase.set('typeRatio', ''          ).toJS(),
       userParamBase.set('typeRatio', []          ).toJS(),
       userParamBase.set('typeRatio', {premium: 1}).toJS(),
 
-      userParamBase.setIn(['typeRatio', 'anonymous'], undefined).toJS(),
-      userParamBase.setIn(['typeRatio', 'anonymous'], null     ).toJS(),
+      userParamBase.setIn(['typeRatio', 'anonymous'], false    ).toJS(),
       userParamBase.setIn(['typeRatio', 'anonymous'], -1       ).toJS(),
-      userParamBase.setIn(['typeRatio', 'anonymous'], '0'      ).toJS(),
+      userParamBase.setIn(['typeRatio', 'anonymous'], 0.1      ).toJS(),
+      userParamBase.setIn(['typeRatio', 'anonymous'], ''       ).toJS(),
       userParamBase.setIn(['typeRatio', 'anonymous'], []       ).toJS(),
       userParamBase.setIn(['typeRatio', 'anonymous'], {}       ).toJS(),
 
-      userParamBase.setIn(['typeRatio', 'normal'], undefined).toJS(),
-      userParamBase.setIn(['typeRatio', 'normal'], null     ).toJS(),
+      userParamBase.setIn(['typeRatio', 'normal'], false    ).toJS(),
       userParamBase.setIn(['typeRatio', 'normal'], -1       ).toJS(),
-      userParamBase.setIn(['typeRatio', 'normal'], '0'      ).toJS(),
+      userParamBase.setIn(['typeRatio', 'normal'], 0.1      ).toJS(),
+      userParamBase.setIn(['typeRatio', 'normal'], ''       ).toJS(),
       userParamBase.setIn(['typeRatio', 'normal'], []       ).toJS(),
       userParamBase.setIn(['typeRatio', 'normal'], {}       ).toJS(),
     ];
@@ -63,13 +68,20 @@ describe('UserGenerator', () => {
   });
 
   test('randomUser() should return some user', () => {
-    const inputGenerator = jsc.record({
-      num      : jscPosInteger,
-      typeRatio: jsc.record({
-        anonymous: jsc.nat(),
-        normal   : jsc.nat(),
+    const inputGenerator = jsc.oneof([
+      jsc.record({
+        num: jscPosInteger,
       }),
-    });
+      jsc.record({
+        num      : jscPosInteger,
+        typeRatio: jsc.oneof([
+          jsc.constant(undefined),
+          jsc.constant(null),
+          jsc.record({anonymous: jscPosInteger, normal: jsc.nat()}),
+          jsc.record({anonymous: jsc.nat()    , normal: jsc.nat()}),
+        ]),
+      }),
+    ]);
     jsc.assertForall(inputGenerator, (input) => {
       const user = Map(new UserGenerator(input).randomUser());
       expect(user.has('email'    )).toBeTruthy();
@@ -84,9 +96,15 @@ describe('UserGenerator', () => {
   test('randomUser() should return some anonymous user', () => {
     const inputGenerator = jsc.record({
       num      : jscPosInteger,
-      typeRatio: jsc.record({
-        anonymous: jscPosInteger,
-      }),
+      typeRatio: jsc.oneof([
+        jsc.record({
+          anonymous: jscPosInteger,
+        }),
+        jsc.record({
+          anonymous: jscPosInteger,
+          normal   : jsc.elements([undefined, null, 0]),
+        }),
+      ]),
     });
     jsc.assertForall(inputGenerator, (input) => {
       const user = Map(new UserGenerator(input).randomUser());
