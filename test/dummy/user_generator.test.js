@@ -70,12 +70,14 @@ describe('UserGenerator', () => {
         normal   : jsc.nat(),
       }),
     });
-    jsc.forall(inputGenerator, (input) => {
+    jsc.assertForall(inputGenerator, (input) => {
       const user = Map(new UserGenerator(input).randomUser());
-      jsc.assert(user.has('email'    ));
-      jsc.assert(user.has('uuid'     ));
-      jsc.assert(user.has('userAgent'));
-      jsc.assert(user.has('ipAddress'));
+      expect(user.has('email'    )).toBeTruthy();
+      expect(user.has('uuid'     )).toBeTruthy();
+      expect(user.has('userAgent')).toBeTruthy();
+      expect(user.has('ipAddress')).toBeTruthy();
+
+      return true;
     });
   });
 
@@ -86,12 +88,14 @@ describe('UserGenerator', () => {
         anonymous: jscPosInteger,
       }),
     });
-    jsc.forall(inputGenerator, (input) => {
+    jsc.assertForall(inputGenerator, (input) => {
       const user = Map(new UserGenerator(input).randomUser());
-      jsc.assert(user.get('email') === '-');
-      jsc.assert(is.null(user.get('uuid')));
-      jsc.assert(user.has('userAgent'));
-      jsc.assert(user.has('ipAddress'));
+      expect(user.get('email') === '-').toBeTruthy();
+      expect(is.null(user.get('uuid'))).toBeTruthy();
+      expect(user.has('userAgent')    ).toBeTruthy();
+      expect(user.has('ipAddress')    ).toBeTruthy();
+
+      return true;
     });
   });
 
@@ -108,18 +112,19 @@ describe('UserGenerator', () => {
         normal   : jsc.nat(),
       }),
     });
-    jsc.forall(inputGenerator, (input) => {
+    jsc.assertForall(inputGenerator, (input) => {
       const users = new UserGenerator(input)
         .all()
         .map((user) => Map(user));
-      jsc.assert(users.length === input.num);
+      expect(users.length === input.num).toBeTruthy();
       for (const user of users) {
-        jsc.assert(user.has('email'    ));
-        jsc.assert(user.has('uuid'     ));
-        jsc.assert(user.has('userAgent'));
-        jsc.assert(user.has('ipAddress'));
+        expect(user.has('email'    )).toBeTruthy();
+        expect(user.has('uuid'     )).toBeTruthy();
+        expect(user.has('userAgent')).toBeTruthy();
+        expect(user.has('ipAddress')).toBeTruthy();
       };
-      return sizeIsCorrect && allElemsAreUser;
+
+      return true;
     });
   });
 });

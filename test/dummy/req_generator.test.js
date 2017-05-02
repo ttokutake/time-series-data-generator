@@ -94,16 +94,18 @@ describe('ReqGenerator', () => {
       statusRatio: statusRatioGenerator,
     }));
 
-    jsc.forall(inputGenerator, (input) => {
+    jsc.assertForall(inputGenerator, (input) => {
       const list = List(input);
       const methodCandidates = list.map(({method}) => method)
       const pathCandidates   = list.map(({path}  ) => path)
 
       const reqGenerator           = new ReqGenerator(input);
       const {method, path, status} = reqGenerator.randomRequest();
-      jsc.assert(methodCandidates.includes(method));
-      jsc.assert(pathCandidates  .includes(path  ));
-      jsc.assert(statusCandidates.includes(status));
+      expect(methodCandidates.includes(method)).toBeTruthy();
+      expect(pathCandidates  .includes(path  )).toBeTruthy();
+      expect(statusCandidates.includes(status)).toBeTruthy();
+
+      return true;
     });
   });
 
@@ -228,15 +230,17 @@ describe('CrudReqGenerator', () => {
       }),
     });
 
-    jsc.forall(inputGenerator, jsc.string, (input, id) => {
+    jsc.assertForall(inputGenerator, jsc.string, (input, id) => {
       const pathRegExp       = new RegExp(`^/v1/${escapeRegExp(input.resource)}(/${escapeRegExp(id)})?`);
       const methodCandidates = ['POST', 'GET', 'PUT', 'DELETE'];
 
       const crudReqGenerator       = new CrudReqGenerator(input);
       const {method, path, status} = crudReqGenerator.randomRequest(id);
-      jsc.assert(methodCandidates.includes(method));
-      jsc.assert(path.match(pathRegExp)           );
-      jsc.assert(statusCandidates.includes(status));
+      expect(methodCandidates.includes(method)).toBeTruthy();
+      expect(path.match(pathRegExp)           ).toBeTruthy();
+      expect(statusCandidates.includes(status)).toBeTruthy();
+
+      return true;
     });
   });
 
