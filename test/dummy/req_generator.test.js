@@ -5,7 +5,6 @@ const {
 
 const escapeRegExp = require('escape-string-regexp');
 const {
-  is: areEqual,
   List,
   Map,
 } = require('immutable');
@@ -107,35 +106,50 @@ describe('ReqGenerator', () => {
     }));
 
     jsc.assertForall(inputGenerator, (input) => {
-      const list = List(input);
-      const methodCandidates = list.map(({method}) => method)
-      const pathCandidates   = list.map(({path}  ) => path)
-
-      const reqGenerator           = new ReqGenerator(input);
-      const {method, path, status} = reqGenerator.randomRequest();
-      expect(methodCandidates.includes(method)).toBeTruthy();
-      expect(pathCandidates  .includes(path  )).toBeTruthy();
-      expect(statusCandidates.includes(status)).toBeTruthy();
+      const methodCandidates = input.map(({method}) => method)
+      const pathCandidates   = input.map(({path}  ) => path  )
+      const {method, path, status} = new ReqGenerator(input).randomRequest();
+      expect(methodCandidates).toContain(method);
+      expect(pathCandidates  ).toContain(path  );
+      expect(statusCandidates).toContain(status);
 
       return true;
     });
   });
 
   test('randomRequest() should return default request', () => {
-    const inputs = [
-      [],
-      [{method: 'HEAD', path: '/index.html', ratio: 0, statusRatio: {200: 1}}],
-    ];
+    const inputGenerator = jsc.array(jsc.record({
+      method     : jsc.string,
+      path       : jsc.string,
+      ratio      : jsc.constant(0),
+      statusRatio: statusRatioGenerator,
+    }));
 
-    for (const input of inputs) {
+    jsc.assertForall(inputGenerator, (input) => {
       expect(new ReqGenerator(input).randomRequest()).toEqual(ReqGenerator.defaultRequest());
-    }
+
+      return true;
+    });
   });
 
   test('randomRequest() should return request with empty status', () => {
-    const input = [{method: 'HEAD', path: '/index.html', ratio: 1, statusRatio: {}}];
+    const inputGenerator = jsc.nearray(jsc.record({
+      method     : jsc.string,
+      path       : jsc.string,
+      ratio      : jscPosInteger,
+      statusRatio: jsc.constant({}),
+    }));
 
-    expect(new ReqGenerator(input).randomRequest()).toEqual({method: 'HEAD', path: '/index.html', status: '-'});
+    jsc.assertForall(inputGenerator, (input) => {
+      const methodCandidates = input.map(({method}) => method);
+      const pathCandidates   = input.map(({path  }) => path  );
+      const {method, path, status} = new ReqGenerator(input).randomRequest();
+      expect(methodCandidates).toContain(method);
+      expect(pathCandidates  ).toContain(path);
+      expect(status          ).toBe('-');
+
+      return true;
+    });
   });
 });
 
@@ -268,29 +282,32 @@ describe('CrudReqGenerator', () => {
     jsc.assertForall(inputGenerator, jsc.string, (input, id) => {
       const pathRegExp       = new RegExp(`^/v1/${escapeRegExp(input.resource)}(/${escapeRegExp(id)})?`);
       const methodCandidates = ['POST', 'GET', 'PUT', 'DELETE'];
-
-      const crudReqGenerator       = new CrudReqGenerator(input);
-      const {method, path, status} = crudReqGenerator.randomRequest(id);
-      expect(methodCandidates.includes(method)).toBeTruthy();
-      expect(path.match(pathRegExp)           ).toBeTruthy();
-      expect(statusCandidates.includes(status)).toBeTruthy();
+      const {method, path, status} = new CrudReqGenerator(input).randomRequest(id);
+      expect(methodCandidates      ).toContain(method);
+      expect(path.match(pathRegExp)).toBeTruthy();
+      expect(statusCandidates      ).toContain(status);
 
       return true;
     });
   });
 
   test('randomRequest() should return default request', () => {
-    const inputs = [
-      {resource: 'users', methodRatio: {}                                         },
-      {resource: 'users', methodRatio: {POST  : {ratio: 0, statusRatio: {201: 1}}}},
-      {resource: 'users', methodRatio: {GET   : {ratio: 0, statusRatio: {200: 1}}}},
-      {resource: 'users', methodRatio: {PUT   : {ratio: 0, statusRatio: {200: 1}}}},
-      {resource: 'users', methodRatio: {DELETE: {ratio: 0, statusRatio: {204: 1}}}},
-    ];
+    const inputGenerator = jsc.record({
+      resource   : jsc.string,
+      methodRatio: jsc.oneof([
+        jsc.constant({}),
+        jsc.record({POST  : jsc.record({ratio: jsc.constant(0), statusRatio: statusRatioGenerator})}),
+        jsc.record({GET   : jsc.record({ratio: jsc.constant(0), statusRatio: statusRatioGenerator})}),
+        jsc.record({PUT   : jsc.record({ratio: jsc.constant(0), statusRatio: statusRatioGenerator})}),
+        jsc.record({DELETE: jsc.record({ratio: jsc.constant(0), statusRatio: statusRatioGenerator})}),
+      ]),
+    });
 
-    for (const input of inputs) {
+    jsc.assertForall(inputGenerator, (input) => {
       expect(new CrudReqGenerator(input).randomRequest('id')).toEqual(CrudReqGenerator.defaultRequest());
-    }
+
+      return true;
+    });
   });
 
   test('randomRequest() should return crud request with empty status', () => {
