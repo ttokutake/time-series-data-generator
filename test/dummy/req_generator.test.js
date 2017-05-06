@@ -69,6 +69,7 @@ describe('ReqGenerator', () => {
 
       ...(new TypeBasis()
         .withoutJson()
+        .add({200: -1})
         .get()
         .map((v) => reqParamBase.set('statusRatio', v).toJSON())),
       [reqParamBase.delete('statusRatio').toJSON()],
@@ -166,26 +167,48 @@ describe('CrudReqGenerator', () => {
       reqParamBase.delete('methodRatio').toJS(),
 
       ...(new TypeBasis()
+        .withoutUndefined()
+        .withoutNull()
+        .withoutJson()
+        .get()
+        .map((v) => reqParamBase.setIn(['methodRatio', 'POST'], v).toJS())),
+      ...(new TypeBasis()
+        .withoutUndefined()
+        .withoutNull()
+        .withoutJson()
+        .get()
+        .map((v) => reqParamBase.setIn(['methodRatio', 'GET'], v).toJS())),
+      ...(new TypeBasis()
+        .withoutUndefined()
+        .withoutNull()
+        .withoutJson()
+        .get()
+        .map((v) => reqParamBase.setIn(['methodRatio', 'PUT'], v).toJS())),
+      ...(new TypeBasis()
+        .withoutUndefined()
+        .withoutNull()
+        .withoutJson()
+        .get()
+        .map((v) => reqParamBase.setIn(['methodRatio', 'DELETE'], v).toJS())),
+
+      ...(new TypeBasis()
         .withoutZero()
         .withoutPosInteger()
         .get()
         .map((v) => reqParamBase.setIn(['methodRatio', 'POST', 'ratio'], v).toJS())),
       reqParamBase.deleteIn(['methodRatio', 'POST', 'ratio']).toJS(),
-
       ...(new TypeBasis()
         .withoutZero()
         .withoutPosInteger()
         .get()
         .map((v) => reqParamBase.setIn(['methodRatio', 'GET', 'ratio'], v).toJS())),
       reqParamBase.deleteIn(['methodRatio', 'GET', 'ratio']).toJS(),
-
       ...(new TypeBasis()
         .withoutZero()
         .withoutPosInteger()
         .get()
         .map((v) => reqParamBase.setIn(['methodRatio', 'PUT', 'ratio'], v).toJS())),
       reqParamBase.deleteIn(['methodRatio', 'PUT', 'ratio']).toJS(),
-
       ...(new TypeBasis()
         .withoutZero()
         .withoutPosInteger()
@@ -195,24 +218,25 @@ describe('CrudReqGenerator', () => {
 
       ...(new TypeBasis()
         .withoutJson()
+        .add({200: -1})
         .get()
         .map((v) => reqParamBase.setIn(['methodRatio', 'POST', 'statusRatio'], v).toJS())),
       reqParamBase.deleteIn(['methodRatio', 'POST', 'statusRatio']).toJS(),
-
       ...(new TypeBasis()
         .withoutJson()
+        .add({200: -1})
         .get()
         .map((v) => reqParamBase.setIn(['methodRatio', 'GET', 'statusRatio'], v).toJS())),
       reqParamBase.deleteIn(['methodRatio', 'GET', 'statusRatio']).toJS(),
-
       ...(new TypeBasis()
         .withoutJson()
+        .add({200: -1})
         .get()
         .map((v) => reqParamBase.setIn(['methodRatio', 'PUT', 'statusRatio'], v).toJS())),
       reqParamBase.deleteIn(['methodRatio', 'PUT', 'statusRatio']).toJS(),
-
       ...(new TypeBasis()
         .withoutJson()
+        .add({200: -1})
         .get()
         .map((v) => reqParamBase.setIn(['methodRatio', 'DELETE', 'statusRatio'], v).toJS())),
       reqParamBase.deleteIn(['methodRatio', 'DELETE', 'statusRatio']).toJS(),
