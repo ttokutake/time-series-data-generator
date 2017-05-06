@@ -28,17 +28,15 @@ describe('RatioMap', () => {
         return true;
       }
       const candidates = Map(input).keySeq();
-
-      const ratioMap = new RatioMap(input);
-      const result   = ratioMap.randomKey();
-      return candidates.includes(result);
+      const output     = new RatioMap(input).randomKey();
+      return candidates.includes(output);
     });
   });
 
   test('randomKey() should return null', () => {
     jsc.assertForall(jsc.dict(jsc.elements([undefined, 0])), (input) => {
-      const ratioMap = new RatioMap(input);
-      return is.null(ratioMap.randomKey());
+      const output = new RatioMap(input).randomKey();
+      return is.null(output);
     });
   });
 
@@ -48,9 +46,8 @@ describe('RatioMap', () => {
       'non-selected': jsc.elements([undefined, 0]),
     });
     jsc.assertForall(inputGenerator, (input) => {
-      const ratioMap = new RatioMap(input);
-      const result   = ratioMap.randomKey();
-      return result === 'selected';
+      const output = new RatioMap(input).randomKey();
+      return output === 'selected';
     });
   });
 
