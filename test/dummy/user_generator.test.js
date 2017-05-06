@@ -36,7 +36,6 @@ describe('UserGenerator', () => {
 
       ...(new TypeBasis()
         .withoutUndefined()
-        .withoutNull()
         .withoutJson()
         .add({premium: 1})
         .get()
@@ -44,7 +43,6 @@ describe('UserGenerator', () => {
 
       ...(new TypeBasis()
         .withoutUndefined()
-        .withoutNull()
         .withoutZero()
         .withoutPosInteger()
         .get()
@@ -52,7 +50,6 @@ describe('UserGenerator', () => {
 
       ...(new TypeBasis()
         .withoutUndefined()
-        .withoutNull()
         .withoutZero()
         .withoutPosInteger()
         .get()
@@ -73,9 +70,10 @@ describe('UserGenerator', () => {
         num      : jscPosInteger,
         typeRatio: jsc.oneof([
           jsc.constant(undefined),
-          jsc.constant(null),
-          jsc.record({anonymous: jscPosInteger, normal: jsc.nat()}),
-          jsc.record({anonymous: jsc.nat()    , normal: jsc.nat()}),
+          jsc.record({
+            anonymous: jsc.oneof([jsc.constant(undefined), jsc.nat()]),
+            normal   : jsc.oneof([jsc.constant(undefined), jsc.nat()]),
+          }),
         ]),
       }),
     ]);
@@ -99,16 +97,16 @@ describe('UserGenerator', () => {
         }),
         jsc.record({
           anonymous: jscPosInteger,
-          normal   : jsc.elements([undefined, null, 0]),
+          normal   : jsc.elements([undefined, 0]),
         }),
       ]),
     });
     jsc.assertForall(inputGenerator, (input) => {
       const user = Map(new UserGenerator(input).randomUser());
-      expect(user.get('email') === '-').toBeTruthy();
-      expect(is.null(user.get('uuid'))).toBeTruthy();
-      expect(user.has('userAgent')    ).toBeTruthy();
-      expect(user.has('ipAddress')    ).toBeTruthy();
+      expect(user.get('email')    ).toBe('-');
+      expect(user.get('uuid')     ).toBeNull();
+      expect(user.has('userAgent')).toBeTruthy();
+      expect(user.has('ipAddress')).toBeTruthy();
 
       return true;
     });
@@ -131,7 +129,7 @@ describe('UserGenerator', () => {
       const users = new UserGenerator(input)
         .all()
         .map((user) => Map(user));
-      expect(users.length === input.num).toBeTruthy();
+      expect(users.length).toBe(input.num);
       for (const user of users) {
         expect(user.has('email'    )).toBeTruthy();
         expect(user.has('uuid'     )).toBeTruthy();

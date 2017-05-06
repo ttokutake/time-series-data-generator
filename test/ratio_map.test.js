@@ -13,12 +13,11 @@ describe('RatioMap', () => {
   test('validate() should throw Error', () => {
     const ratios = new TypeBasis()
       .withoutUndefined()
-      .withoutNull()
       .withoutInteger()
       .get()
       .map((v) => { return {a: v}; });
 
-    for (ratio of ratios) {
+    for (const ratio of ratios) {
       expect(() => RatioMap.validate(ratio)).toThrow(/v_i/);
     }
   });
@@ -37,7 +36,7 @@ describe('RatioMap', () => {
   });
 
   test('randomKey() should return null', () => {
-    jsc.assertForall(jsc.dict(jsc.elements([undefined, null, 0])), (input) => {
+    jsc.assertForall(jsc.dict(jsc.elements([undefined, 0])), (input) => {
       const ratioMap = new RatioMap(input);
       return is.null(ratioMap.randomKey());
     });
@@ -46,13 +45,9 @@ describe('RatioMap', () => {
   test('randomKey() should return some key whose "ratio" is not 0', () => {
     const inputGenerator = jsc.record({
       selected      : jscPosInteger,
-      'non-selected': jsc.constant(0),
+      'non-selected': jsc.elements([undefined, 0]),
     });
     jsc.assertForall(inputGenerator, (input) => {
-      if (is.empty(input)) {
-        return true;
-      }
-
       const ratioMap = new RatioMap(input);
       const result   = ratioMap.randomKey();
       return result === 'selected';
@@ -68,7 +63,7 @@ describe('RatioMap', () => {
       [{a: 1, b: 2}, {a: [1, 1], b: [2, 3]}],
     ];
 
-    for ([ratio, expected] of data) {
+    for (const [ratio, expected] of data) {
       const ratioMap = new RatioMap(ratio);
       expect(ratioMap.ranges.toJSON()).toEqual(expected);
     }
@@ -83,7 +78,7 @@ describe('RatioMap', () => {
       [{a: 1, b: 2}, 3],
     ];
 
-    for ([ratio, expected] of data) {
+    for (const [ratio, expected] of data) {
       const ratioMap = new RatioMap(ratio);
       expect(ratioMap.max).toEqual(expected);
     }
