@@ -19,20 +19,17 @@ describe('DateGenerator', () => {
     const inputs = [
       ...(new TypeBasis()
         .withoutUndefined()
-        .withoutNull()
         .withoutJson()
         .get()),
 
       ...(new TypeBasis()
         .withoutUndefined()
-        .withoutNull()
         .withoutInteger()
         .get()
         .map((v) => { return {from: v}; })),
 
       ...(new TypeBasis()
         .withoutUndefined()
-        .withoutNull()
         .withoutInteger()
         .get()
         .map((v) => { return {until: v}; })),
@@ -46,7 +43,7 @@ describe('DateGenerator', () => {
   });
 
   test('randomDate() should return recent Date', () => {
-    jsc.assertForall(jsc.elements([undefined, null]), (input) => {
+    jsc.assertForall(jsc.constant(undefined), (input) => {
       const output = moment(new DateGenerator(input).randomDate());
       const now    = new Date();
       const from   = moment(now).subtract(1, 'days');
@@ -81,7 +78,6 @@ describe('DateGenerator', () => {
       const inputs = [
         {from                  },
         {from, until: undefined},
-        {from, until: null     },
       ];
       for (const input of inputs) {
         const output = moment(new DateGenerator(input).randomDate());
@@ -100,7 +96,6 @@ describe('DateGenerator', () => {
       const inputs = [
         {                 until},
         {from: undefined, until},
-        {from: null     , until},
       ];
       for (const input of inputs) {
         const output = moment(new DateGenerator(input).randomDate());
