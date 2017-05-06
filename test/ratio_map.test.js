@@ -36,14 +36,14 @@ describe('RatioMap', () => {
     });
   });
 
-  test('RatioMap.randomKey() should return null', () => {
+  test('randomKey() should return null', () => {
     jsc.assertForall(jsc.dict(jsc.elements([undefined, null, 0])), (input) => {
       const ratioMap = new RatioMap(input);
       return is.null(ratioMap.randomKey());
     });
   });
 
-  test('randomKey() should return some key without one of which "ratio" is 0', () => {
+  test('randomKey() should return some key whose "ratio" is not 0', () => {
     const inputGenerator = jsc.record({
       selected      : jscPosInteger,
       'non-selected': jsc.constant(0),
@@ -59,7 +59,7 @@ describe('RatioMap', () => {
     });
   });
 
-  test ('RatioMap.ranges should be range expression', () => {
+  test ('this.ranges should be range expression', () => {
     const data = [
       [{a: 1      }, {a: [1, 1]}           ],
       [{a: 1, b: 0}, {a: [1, 1]}           ],
@@ -74,7 +74,7 @@ describe('RatioMap', () => {
     }
   });
 
-  test ('RatioMap.max should be max of range expression', () => {
+  test ('this.max should be max of range expression', () => {
     const data = [
       [{a: 1      }, 1],
       [{a: 1, b: 0}, 1],

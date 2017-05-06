@@ -6,6 +6,23 @@ const is  = require('is_js');
 const jsc = require('jsverify');
 
 describe('randomInt()', () => {
+  test('it should throw Error', () => {
+    const inputs = [
+      undefined,
+      null,
+      false,
+      0.1,
+      '',
+      [],
+      {},
+    ];
+
+    for (input of inputs) {
+      expect(() => randomInt(input, 0    )).toThrow(/min/);
+      expect(() => randomInt(0    , input)).toThrow(/max/);
+    }
+  });
+
   test('it should return integer between range of min and max', () => {
     jsc.assertForall(jsc.integer(), jsc.integer(), (x, y) => {
       const [min, max] = x < y ? [x, y] : [y, x];
@@ -23,20 +40,5 @@ describe('randomInt()', () => {
       const result     = randomInt(min, max);
       return is.null(result);
     });
-  });
-
-  test('it should throw Error', () => {
-    const inputs = [
-      undefined,
-      null,
-      '0',
-      [],
-      {},
-    ];
-
-    for (input of inputs) {
-      expect(() => randomInt(input, 0    )).toThrow(/min/);
-      expect(() => randomInt(0    , input)).toThrow(/max/);
-    }
   });
 });
