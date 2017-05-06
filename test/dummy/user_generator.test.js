@@ -8,6 +8,7 @@ const is  = require('is_js');
 const jsc = require('jsverify');
 
 const {
+  TypeBasis,
   jscPosInteger,
 } = require('../util');
 
@@ -22,44 +23,40 @@ describe('UserGenerator', () => {
     });
 
     const inputs = [
-      undefined,
-      null,
-      false,
-      0,
-      0.1,
-      '',
-      [],
+      ...(new TypeBasis()
+        .withoutObject()
+        .get()),
 
-      userParamBase.set('num', undefined).toJS(),
-      userParamBase.set('num', null     ).toJS(),
-      userParamBase.set('num', false    ).toJS(),
-      userParamBase.set('num', -1       ).toJS(),
-      userParamBase.set('num', 0.1      ).toJS(),
-      userParamBase.set('num', ''       ).toJS(),
-      userParamBase.set('num', []       ).toJS(),
-      userParamBase.set('num', {}       ).toJS(),
-      userParamBase.delete('num')        .toJS(),
+      ...(new TypeBasis()
+        .withoutZero()
+        .withoutPosInteger()
+        .get()
+        .map((v) => userParamBase.set('num', v).toJS())),
+      userParamBase.delete('num') .toJS(),
 
-      userParamBase.set('typeRatio', false       ).toJS(),
-      userParamBase.set('typeRatio', 0           ).toJS(),
-      userParamBase.set('typeRatio', 0.1         ).toJS(),
-      userParamBase.set('typeRatio', ''          ).toJS(),
-      userParamBase.set('typeRatio', []          ).toJS(),
-      userParamBase.set('typeRatio', {premium: 1}).toJS(),
+      ...(new TypeBasis()
+        .withoutUndefined()
+        .withoutNull()
+        .withoutObject()
+        .add({premium: 1})
+        .get()
+        .map((v) => userParamBase.set('typeRatio', v).toJS())),
 
-      userParamBase.setIn(['typeRatio', 'anonymous'], false    ).toJS(),
-      userParamBase.setIn(['typeRatio', 'anonymous'], -1       ).toJS(),
-      userParamBase.setIn(['typeRatio', 'anonymous'], 0.1      ).toJS(),
-      userParamBase.setIn(['typeRatio', 'anonymous'], ''       ).toJS(),
-      userParamBase.setIn(['typeRatio', 'anonymous'], []       ).toJS(),
-      userParamBase.setIn(['typeRatio', 'anonymous'], {}       ).toJS(),
+      ...(new TypeBasis()
+        .withoutUndefined()
+        .withoutNull()
+        .withoutZero()
+        .withoutPosInteger()
+        .get()
+        .map((v) => userParamBase.setIn(['typeRatio', 'anonymous'], v).toJS())),
 
-      userParamBase.setIn(['typeRatio', 'normal'], false    ).toJS(),
-      userParamBase.setIn(['typeRatio', 'normal'], -1       ).toJS(),
-      userParamBase.setIn(['typeRatio', 'normal'], 0.1      ).toJS(),
-      userParamBase.setIn(['typeRatio', 'normal'], ''       ).toJS(),
-      userParamBase.setIn(['typeRatio', 'normal'], []       ).toJS(),
-      userParamBase.setIn(['typeRatio', 'normal'], {}       ).toJS(),
+      ...(new TypeBasis()
+        .withoutUndefined()
+        .withoutNull()
+        .withoutZero()
+        .withoutPosInteger()
+        .get()
+        .map((v) => userParamBase.setIn(['typeRatio', 'normal'], v).toJS())),
     ];
 
     for (const input of inputs) {

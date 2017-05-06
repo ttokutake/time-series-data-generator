@@ -11,6 +11,7 @@ const {
 const jsc = require('jsverify');
 
 const {
+  TypeBasis,
   jscPosInteger,
 } = require('../util');
 
@@ -38,58 +39,39 @@ describe('ReqGenerator', () => {
     });
 
     const inputs = [
-      undefined,
-      null,
-      false,
-      0,
-      0.1,
-      '',
-      {},
+      ...(new TypeBasis()
+        .withoutArray()
+        .get()),
 
-      [undefined],
-      [null     ],
-      [false    ],
-      [0        ],
-      [0.1      ],
-      [''       ],
-      [[]       ],
+      ...(new TypeBasis()
+        .withoutObject()
+        .get()
+        .map((v) => [v])),
 
-      [reqParamBase.set('method', undefined).toJSON()],
-      [reqParamBase.set('method', null     ).toJSON()],
-      [reqParamBase.set('method', false    ).toJSON()],
-      [reqParamBase.set('method', 0        ).toJSON()],
-      [reqParamBase.set('method', 0.1      ).toJSON()],
-      [reqParamBase.set('method', []       ).toJSON()],
-      [reqParamBase.set('method', {}       ).toJSON()],
-      [reqParamBase.delete('method')        .toJSON()],
+      ...(new TypeBasis()
+        .withoutString()
+        .get()
+        .map((v) => reqParamBase.set('method', v).toJSON())),
+      [reqParamBase.delete('method').toJSON()],
 
-      [reqParamBase.set('path', undefined).toJSON()],
-      [reqParamBase.set('path', null     ).toJSON()],
-      [reqParamBase.set('path', false    ).toJSON()],
-      [reqParamBase.set('path', 0        ).toJSON()],
-      [reqParamBase.set('path', 0.1      ).toJSON()],
-      [reqParamBase.set('path', []       ).toJSON()],
-      [reqParamBase.set('path', {}       ).toJSON()],
-      [reqParamBase.delete('path')        .toJSON()],
+      ...(new TypeBasis()
+        .withoutString()
+        .get()
+        .map((v) => reqParamBase.set('path', v).toJSON())),
+      [reqParamBase.delete('path').toJSON()],
 
-      [reqParamBase.set('ratio', undefined).toJSON()],
-      [reqParamBase.set('ratio', null     ).toJSON()],
-      [reqParamBase.set('ratio', false    ).toJSON()],
-      [reqParamBase.set('ratio', -1       ).toJSON()],
-      [reqParamBase.set('ratio', 0.1      ).toJSON()],
-      [reqParamBase.set('ratio', ''       ).toJSON()],
-      [reqParamBase.set('ratio', []       ).toJSON()],
-      [reqParamBase.set('ratio', {}       ).toJSON()],
-      [reqParamBase.delete('ratio')        .toJSON()],
+      ...(new TypeBasis()
+        .withoutZero()
+        .withoutPosInteger()
+        .get()
+        .map((v) => reqParamBase.set('ratio', v).toJSON())),
+      [reqParamBase.delete('ratio') .toJSON()],
 
-      [reqParamBase.set('statusRatio', undefined).toJSON()],
-      [reqParamBase.set('statusRatio', null     ).toJSON()],
-      [reqParamBase.set('statusRatio', false    ).toJSON()],
-      [reqParamBase.set('statusRatio', 0        ).toJSON()],
-      [reqParamBase.set('statusRatio', 0.1      ).toJSON()],
-      [reqParamBase.set('statusRatio', ''       ).toJSON()],
-      [reqParamBase.set('statusRatio', []       ).toJSON()],
-      [reqParamBase.delete('statusRatio')        .toJSON()],
+      ...(new TypeBasis()
+        .withoutObject()
+        .get()
+        .map((v) => reqParamBase.set('statusRatio', v).toJSON())),
+      [reqParamBase.delete('statusRatio').toJSON()],
     ];
 
     for (const input of inputs) {
@@ -166,100 +148,73 @@ describe('CrudReqGenerator', () => {
     });
 
     const inputs = [
-      undefined,
-      null,
-      false,
-      0,
-      0.1,
-      '',
-      [],
+      ...(new TypeBasis()
+        .withoutObject()
+        .get()),
 
-      reqParamBase.set('resource', undefined).toJS(),
-      reqParamBase.set('resource', null     ).toJS(),
-      reqParamBase.set('resource', false    ).toJS(),
-      reqParamBase.set('resource', 0        ).toJS(),
-      reqParamBase.set('resource', 0.1      ).toJS(),
-      reqParamBase.set('resource', []       ).toJS(),
-      reqParamBase.set('resource', {}       ).toJS(),
+      ...(new TypeBasis()
+        .withoutString()
+        .get()
+        .map((v) => reqParamBase.set('resource', v).toJS())),
       reqParamBase.delete('resource').toJS(),
 
-      reqParamBase.set('methodRatio', undefined ).toJS(),
-      reqParamBase.set('methodRatio', null      ).toJS(),
-      reqParamBase.set('methodRatio', false     ).toJS(),
-      reqParamBase.set('methodRatio', 0         ).toJS(),
-      reqParamBase.set('methodRatio', 0.1       ).toJS(),
-      reqParamBase.set('methodRatio', ''        ).toJS(),
-      reqParamBase.set('methodRatio', []        ).toJS(),
-      reqParamBase.set('methodRatio', {HEAD: {}}).toJS(),
+      ...(new TypeBasis()
+        .withoutObject()
+        .add({HEAD: {ratio: 1, statusRatio: {201: 1}}})
+        .get()
+        .map((v) => reqParamBase.set('methodRatio', v).toJS())),
       reqParamBase.delete('methodRatio').toJS(),
 
-      reqParamBase.setIn(['methodRatio', 'POST'  , 'ratio'], undefined).toJS(),
-      reqParamBase.setIn(['methodRatio', 'POST'  , 'ratio'], null     ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'POST'  , 'ratio'], false    ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'POST'  , 'ratio'], -1       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'POST'  , 'ratio'], 0.1      ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'POST'  , 'ratio'], ''       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'POST'  , 'ratio'], []       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'POST'  , 'ratio'], {}       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'GET'   , 'ratio'], undefined).toJS(),
-      reqParamBase.setIn(['methodRatio', 'GET'   , 'ratio'], null     ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'GET'   , 'ratio'], false    ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'GET'   , 'ratio'], -1       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'GET'   , 'ratio'], ''       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'GET'   , 'ratio'], []       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'GET'   , 'ratio'], {}       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'PUT'   , 'ratio'], undefined).toJS(),
-      reqParamBase.setIn(['methodRatio', 'PUT'   , 'ratio'], null     ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'PUT'   , 'ratio'], false    ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'PUT'   , 'ratio'], -1       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'PUT'   , 'ratio'], ''       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'PUT'   , 'ratio'], []       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'PUT'   , 'ratio'], {}       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'DELETE', 'ratio'], undefined).toJS(),
-      reqParamBase.setIn(['methodRatio', 'DELETE', 'ratio'], null     ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'DELETE', 'ratio'], false    ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'DELETE', 'ratio'], -1       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'DELETE', 'ratio'], ''       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'DELETE', 'ratio'], []       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'DELETE', 'ratio'], {}       ).toJS(),
+      ...(new TypeBasis()
+        .withoutZero()
+        .withoutPosInteger()
+        .get()
+        .map((v) => reqParamBase.setIn(['methodRatio', 'POST', 'ratio'], v).toJS())),
+      reqParamBase.deleteIn(['methodRatio', 'POST', 'ratio']).toJS(),
 
-      reqParamBase.deleteIn(['methodRatio', 'POST'  , 'ratio']).toJS(),
-      reqParamBase.deleteIn(['methodRatio', 'GET'   , 'ratio']).toJS(),
-      reqParamBase.deleteIn(['methodRatio', 'PUT'   , 'ratio']).toJS(),
+      ...(new TypeBasis()
+        .withoutZero()
+        .withoutPosInteger()
+        .get()
+        .map((v) => reqParamBase.setIn(['methodRatio', 'GET', 'ratio'], v).toJS())),
+      reqParamBase.deleteIn(['methodRatio', 'GET', 'ratio']).toJS(),
+
+      ...(new TypeBasis()
+        .withoutZero()
+        .withoutPosInteger()
+        .get()
+        .map((v) => reqParamBase.setIn(['methodRatio', 'PUT', 'ratio'], v).toJS())),
+      reqParamBase.deleteIn(['methodRatio', 'PUT', 'ratio']).toJS(),
+
+      ...(new TypeBasis()
+        .withoutZero()
+        .withoutPosInteger()
+        .get()
+        .map((v) => reqParamBase.setIn(['methodRatio', 'DELETE', 'ratio'], v).toJS())),
       reqParamBase.deleteIn(['methodRatio', 'DELETE', 'ratio']).toJS(),
 
-      reqParamBase.setIn(['methodRatio', 'POST'  , 'statusRatio'], undefined).toJS(),
-      reqParamBase.setIn(['methodRatio', 'POST'  , 'statusRatio'], null     ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'POST'  , 'statusRatio'], false    ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'POST'  , 'statusRatio'], 0        ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'POST'  , 'statusRatio'], 0.1      ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'POST'  , 'statusRatio'], ''       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'POST'  , 'statusRatio'], []       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'GET'   , 'statusRatio'], undefined).toJS(),
-      reqParamBase.setIn(['methodRatio', 'GET'   , 'statusRatio'], null     ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'GET'   , 'statusRatio'], false    ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'GET'   , 'statusRatio'], 0        ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'GET'   , 'statusRatio'], 0.1      ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'GET'   , 'statusRatio'], ''       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'GET'   , 'statusRatio'], []       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'PUT'   , 'statusRatio'], undefined).toJS(),
-      reqParamBase.setIn(['methodRatio', 'PUT'   , 'statusRatio'], null     ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'PUT'   , 'statusRatio'], false    ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'PUT'   , 'statusRatio'], 0        ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'PUT'   , 'statusRatio'], 0.1      ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'PUT'   , 'statusRatio'], ''       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'PUT'   , 'statusRatio'], []       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'DELETE', 'statusRatio'], undefined).toJS(),
-      reqParamBase.setIn(['methodRatio', 'DELETE', 'statusRatio'], null     ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'DELETE', 'statusRatio'], false    ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'DELETE', 'statusRatio'], 0        ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'DELETE', 'statusRatio'], 0.1      ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'DELETE', 'statusRatio'], ''       ).toJS(),
-      reqParamBase.setIn(['methodRatio', 'DELETE', 'statusRatio'], []       ).toJS(),
+      ...(new TypeBasis()
+        .withoutObject()
+        .get()
+        .map((v) => reqParamBase.setIn(['methodRatio', 'POST', 'statusRatio'], v).toJS())),
+      reqParamBase.deleteIn(['methodRatio', 'POST', 'statusRatio']).toJS(),
 
-      reqParamBase.deleteIn(['methodRatio', 'POST'  , 'statusRatio']).toJS(),
-      reqParamBase.deleteIn(['methodRatio', 'GET'   , 'statusRatio']).toJS(),
-      reqParamBase.deleteIn(['methodRatio', 'PUT'   , 'statusRatio']).toJS(),
+      ...(new TypeBasis()
+        .withoutObject()
+        .get()
+        .map((v) => reqParamBase.setIn(['methodRatio', 'GET', 'statusRatio'], v).toJS())),
+      reqParamBase.deleteIn(['methodRatio', 'GET', 'statusRatio']).toJS(),
+
+      ...(new TypeBasis()
+        .withoutObject()
+        .get()
+        .map((v) => reqParamBase.setIn(['methodRatio', 'PUT', 'statusRatio'], v).toJS())),
+      reqParamBase.deleteIn(['methodRatio', 'PUT', 'statusRatio']).toJS(),
+
+      ...(new TypeBasis()
+        .withoutObject()
+        .get()
+        .map((v) => reqParamBase.setIn(['methodRatio', 'DELETE', 'statusRatio'], v).toJS())),
       reqParamBase.deleteIn(['methodRatio', 'DELETE', 'statusRatio']).toJS(),
     ];
 

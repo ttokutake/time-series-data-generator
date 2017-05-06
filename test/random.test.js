@@ -5,17 +5,11 @@ const {
 const is  = require('is_js');
 const jsc = require('jsverify');
 
+const {TypeBasis} = require('./util');
+
 describe('randomInt()', () => {
   test('it should throw Error', () => {
-    const inputs = [
-      undefined,
-      null,
-      false,
-      0.1,
-      '',
-      [],
-      {},
-    ];
+    const inputs = new TypeBasis().withoutInteger().get();
 
     for (input of inputs) {
       expect(() => randomInt(input, 0    )).toThrow(/min/);

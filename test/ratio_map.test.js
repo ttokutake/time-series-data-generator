@@ -5,18 +5,18 @@ const is    = require('is_js');
 const jsc   = require('jsverify');
 
 const {
+  TypeBasis,
   jscPosInteger,
 } = require('./util');
 
 describe('RatioMap', () => {
   test('validate() should throw Error', () => {
-    const ratios = [
-      {a: false},
-      {a: 0.1},
-      {a: ''},
-      {a: []},
-      {a: {}},
-    ];
+    const ratios = new TypeBasis()
+      .withoutUndefined()
+      .withoutNull()
+      .withoutInteger()
+      .get()
+      .map((v) => { return {a: v}; });
 
     for (ratio of ratios) {
       expect(() => RatioMap.validate(ratio)).toThrow(/v_i/);

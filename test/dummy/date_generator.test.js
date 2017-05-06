@@ -5,6 +5,10 @@ const jsc      = require('jsverify');
 const mockDate = require('mockdate');
 const moment   = require('moment');
 
+const {
+  TypeBasis,
+} = require('../util');
+
 describe('DateGenerator', () => {
   afterEach(() => {
     mockDate.reset();
@@ -13,25 +17,25 @@ describe('DateGenerator', () => {
   test('constructor() should throw Error', () => {
     const now    = moment();
     const inputs = [
-      false,
-      0,
-      0.1,
-      '',
-      [],
-      {key: null      },
-      {key: new Date()},
+      ...(new TypeBasis()
+        .withoutUndefined()
+        .withoutNull()
+        .withoutObject()
+        .get()),
 
-      {from: false},
-      {from: 0.1  },
-      {from: ''   },
-      {from: []   },
-      {from: {}   },
+      ...(new TypeBasis()
+        .withoutUndefined()
+        .withoutNull()
+        .withoutInteger()
+        .get()
+        .map((v) => { return {from: v}; })),
 
-      {until: false},
-      {until: 0.1  },
-      {until: ''   },
-      {until: []   },
-      {until: {}   },
+      ...(new TypeBasis()
+        .withoutUndefined()
+        .withoutNull()
+        .withoutInteger()
+        .get()
+        .map((v) => { return {until: v}; })),
 
       {from: now.toDate(), until: now.subtract(1, 'milliseconds').toDate()}
     ];
