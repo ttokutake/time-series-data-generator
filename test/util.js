@@ -72,8 +72,8 @@ class TypeBasis {
     return new TypeBasis(this.values.filter(is.not.array));
   }
 
-  withoutObject() {
-    return new TypeBasis(this.values.filter((v) => is.not.object(v) || is.function(v) || is.array(v)));
+  withoutJson() {
+    return new TypeBasis(this.values.filter(is.not.json));
   }
 
   withoutLamda() {

@@ -24,7 +24,7 @@ describe('UserGenerator', () => {
 
     const inputs = [
       ...(new TypeBasis()
-        .withoutObject()
+        .withoutJson()
         .get()),
 
       ...(new TypeBasis()
@@ -37,7 +37,7 @@ describe('UserGenerator', () => {
       ...(new TypeBasis()
         .withoutUndefined()
         .withoutNull()
-        .withoutObject()
+        .withoutJson()
         .add({premium: 1})
         .get()
         .map((v) => userParamBase.set('typeRatio', v).toJS())),

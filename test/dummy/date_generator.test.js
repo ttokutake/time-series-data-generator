@@ -20,7 +20,7 @@ describe('DateGenerator', () => {
       ...(new TypeBasis()
         .withoutUndefined()
         .withoutNull()
-        .withoutObject()
+        .withoutJson()
         .get()),
 
       ...(new TypeBasis()

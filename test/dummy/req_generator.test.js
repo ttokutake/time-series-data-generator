@@ -44,7 +44,7 @@ describe('ReqGenerator', () => {
         .get()),
 
       ...(new TypeBasis()
-        .withoutObject()
+        .withoutJson()
         .get()
         .map((v) => [v])),
 
@@ -68,7 +68,7 @@ describe('ReqGenerator', () => {
       [reqParamBase.delete('ratio') .toJSON()],
 
       ...(new TypeBasis()
-        .withoutObject()
+        .withoutJson()
         .get()
         .map((v) => reqParamBase.set('statusRatio', v).toJSON())),
       [reqParamBase.delete('statusRatio').toJSON()],
@@ -149,7 +149,7 @@ describe('CrudReqGenerator', () => {
 
     const inputs = [
       ...(new TypeBasis()
-        .withoutObject()
+        .withoutJson()
         .get()),
 
       ...(new TypeBasis()
@@ -159,7 +159,7 @@ describe('CrudReqGenerator', () => {
       reqParamBase.delete('resource').toJS(),
 
       ...(new TypeBasis()
-        .withoutObject()
+        .withoutJson()
         .add({HEAD: {ratio: 1, statusRatio: {201: 1}}})
         .get()
         .map((v) => reqParamBase.set('methodRatio', v).toJS())),
@@ -194,25 +194,25 @@ describe('CrudReqGenerator', () => {
       reqParamBase.deleteIn(['methodRatio', 'DELETE', 'ratio']).toJS(),
 
       ...(new TypeBasis()
-        .withoutObject()
+        .withoutJson()
         .get()
         .map((v) => reqParamBase.setIn(['methodRatio', 'POST', 'statusRatio'], v).toJS())),
       reqParamBase.deleteIn(['methodRatio', 'POST', 'statusRatio']).toJS(),
 
       ...(new TypeBasis()
-        .withoutObject()
+        .withoutJson()
         .get()
         .map((v) => reqParamBase.setIn(['methodRatio', 'GET', 'statusRatio'], v).toJS())),
       reqParamBase.deleteIn(['methodRatio', 'GET', 'statusRatio']).toJS(),
 
       ...(new TypeBasis()
-        .withoutObject()
+        .withoutJson()
         .get()
         .map((v) => reqParamBase.setIn(['methodRatio', 'PUT', 'statusRatio'], v).toJS())),
       reqParamBase.deleteIn(['methodRatio', 'PUT', 'statusRatio']).toJS(),
 
       ...(new TypeBasis()
-        .withoutObject()
+        .withoutJson()
         .get()
         .map((v) => reqParamBase.setIn(['methodRatio', 'DELETE', 'statusRatio'], v).toJS())),
       reqParamBase.deleteIn(['methodRatio', 'DELETE', 'statusRatio']).toJS(),
