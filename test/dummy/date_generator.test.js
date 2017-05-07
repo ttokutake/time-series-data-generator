@@ -62,8 +62,8 @@ describe('DateGenerator', () => {
         {from: from.toISOString(), until: until.toISOString()},
       ];
       for (const input of inputs) {
-        const outputDate = moment(new DateGenerator(input).randomDate());
-        expect(outputDate.isBetween(from, until, null, '[]')).toBeTruthy();
+        const output = moment(new DateGenerator(input).randomDate());
+        expect(output.isBetween(from, until, null, '[]')).toBeTruthy();
       }
 
       return true;

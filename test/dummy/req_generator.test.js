@@ -109,7 +109,8 @@ describe('ReqGenerator', () => {
     }));
 
     jsc.assertForall(inputGenerator, (input) => {
-      expect(new ReqGenerator(input).randomRequest()).toEqual(ReqGenerator.defaultRequest());
+      const output = new ReqGenerator(input).randomRequest();
+      expect(output).toEqual(ReqGenerator.defaultRequest());
 
       return true;
     });
@@ -259,12 +260,12 @@ describe('CrudReqGenerator', () => {
     });
 
     jsc.assertForall(inputGenerator, jsc.string, (input, id) => {
-      const pathRegExp       = new RegExp(`^/v1/${escapeRegExp(input.resource)}(/${escapeRegExp(id)})?`);
       const methodCandidates = ['POST', 'GET', 'PUT', 'DELETE'];
+      const pathRegExp       = new RegExp(`^/v1/${escapeRegExp(input.resource)}(/${escapeRegExp(id)})?`);
       const {method, path, status} = new CrudReqGenerator(input).randomRequest(id);
-      expect(methodCandidates      ).toContain(method);
-      expect(path.match(pathRegExp)).toBeTruthy();
-      expect(statusCandidates      ).toContain(status);
+      expect(methodCandidates).toContain(method);
+      expect(path            ).toMatch(pathRegExp);
+      expect(statusCandidates).toContain(status);
 
       return true;
     });
@@ -283,7 +284,8 @@ describe('CrudReqGenerator', () => {
     });
 
     jsc.assertForall(inputGenerator, (input) => {
-      expect(new CrudReqGenerator(input).randomRequest('id')).toEqual(CrudReqGenerator.defaultRequest());
+      const output = new CrudReqGenerator(input).randomRequest('id');
+      expect(output).toEqual(CrudReqGenerator.defaultRequest());
 
       return true;
     });
@@ -304,7 +306,8 @@ describe('CrudReqGenerator', () => {
     ];
 
     for (const [input, expected] of List(inputs).zip(expects).toJSON()) {
-      expect(new CrudReqGenerator(input).randomRequest('id')).toEqual(expected);
+      const output = new CrudReqGenerator(input).randomRequest('id');
+      expect(output).toEqual(expected);
     }
   });
 });

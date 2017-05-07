@@ -1,7 +1,6 @@
 const UserGenerator = require('../../lib/dummy/user_generator');
 
 const {
-  Map,
   fromJS
 } = require('immutable');
 const is  = require('is_js');
@@ -78,11 +77,11 @@ describe('UserGenerator', () => {
       }),
     ]);
     jsc.assertForall(inputGenerator, (input) => {
-      const user = Map(new UserGenerator(input).randomUser());
-      expect(user.has('email'    )).toBeTruthy();
-      expect(user.has('uuid'     )).toBeTruthy();
-      expect(user.has('userAgent')).toBeTruthy();
-      expect(user.has('ipAddress')).toBeTruthy();
+      const user = new UserGenerator(input).randomUser();
+      expect(user).toHaveProperty('email'    );
+      expect(user).toHaveProperty('uuid'     );
+      expect(user).toHaveProperty('userAgent');
+      expect(user).toHaveProperty('ipAddress');
 
       return true;
     });
@@ -102,19 +101,20 @@ describe('UserGenerator', () => {
       ]),
     });
     jsc.assertForall(inputGenerator, (input) => {
-      const user = Map(new UserGenerator(input).randomUser());
-      expect(user.get('email')    ).toBe('-');
-      expect(user.get('uuid')     ).toBeNull();
-      expect(user.has('userAgent')).toBeTruthy();
-      expect(user.has('ipAddress')).toBeTruthy();
+      const user = new UserGenerator(input).randomUser();
+      expect(user).toHaveProperty('email', '-' );
+      expect(user).toHaveProperty('uuid' , null);
+      expect(user).toHaveProperty('userAgent');
+      expect(user).toHaveProperty('ipAddress');
 
       return true;
     });
   });
 
   test('randomUser() should return null', () => {
-    const input = {num: 0};
-    expect(new UserGenerator(input).randomUser()).toBeNull();
+    const input  = {num: 0};
+    const output = new UserGenerator(input).randomUser();
+    expect(output).toBeNull();
   });
 
   test('all() should return all users', () => {
@@ -126,15 +126,13 @@ describe('UserGenerator', () => {
       }),
     });
     jsc.assertForall(inputGenerator, (input) => {
-      const users = new UserGenerator(input)
-        .all()
-        .map((user) => Map(user));
+      const users = new UserGenerator(input).all();
       expect(users.length).toBe(input.num);
       for (const user of users) {
-        expect(user.has('email'    )).toBeTruthy();
-        expect(user.has('uuid'     )).toBeTruthy();
-        expect(user.has('userAgent')).toBeTruthy();
-        expect(user.has('ipAddress')).toBeTruthy();
+        expect(user).toHaveProperty('email'    );
+        expect(user).toHaveProperty('uuid'     );
+        expect(user).toHaveProperty('userAgent');
+        expect(user).toHaveProperty('ipAddress');
       };
 
       return true;
