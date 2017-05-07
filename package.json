@@ -4,6 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
     "test": "jest"
   },
   "dependencies": {
@@ -12,7 +15,10 @@
     "immutable": "^3.8.1",
     "is_js": "^0.9.0",
     "jsonschema": "^1.1.1",
-    "moment": "^2.18.1"
+    "moment": "^2.18.1",
+    "next": "^2.3.1",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
   },
   "devDependencies": {
     "jest": "^19.0.2",
