@@ -2,7 +2,7 @@ const DateGenerator = require('../../lib/dummy/date_generator');
 
 const is       = require('is_js');
 const jsc      = require('jsverify');
-const mockDate = require('mockdate');
+const MockDate = require('mockdate');
 const moment   = require('moment');
 
 const {
@@ -11,7 +11,7 @@ const {
 
 describe('DateGenerator', () => {
   afterEach(() => {
-    mockDate.reset();
+    MockDate.reset();
   });
 
   test('constructor() should throw Error', () => {
@@ -71,7 +71,7 @@ describe('DateGenerator', () => {
   });
 
   test('randomDate() should return Date satisfying "from" <= now', () => {
-    mockDate.set('2100-01-01T00:00:00.000Z');
+    MockDate.set('2100-01-01T00:00:00.000Z');
     jsc.assertForall(jsc.datetime, (from) => {
       const now = new Date();
 
@@ -89,7 +89,7 @@ describe('DateGenerator', () => {
   });
 
   test('randomDate() should return Date satisfying now <= "until"', () => {
-    mockDate.set('2000-01-01T00:00:00.000Z');
+    MockDate.set('2000-01-01T00:00:00.000Z');
     jsc.assertForall(jsc.datetime, (until) => {
       const now = new Date();
 

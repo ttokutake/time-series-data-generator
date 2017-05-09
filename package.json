@@ -10,7 +10,6 @@
     "test": "jest"
   },
   "dependencies": {
-    "escape-string-regexp": "^1.0.5",
     "faker": "^4.1.0",
     "immutable": "^3.8.1",
     "is_js": "^0.9.0",
@@ -21,6 +20,7 @@
     "react-dom": "^15.5.4"
   },
   "devDependencies": {
+    "escape-string-regexp": "^1.0.5",
     "jest": "^19.0.2",
     "jsverify": "^0.8.2",
     "mockdate": "^2.0.1"
