@@ -7,16 +7,24 @@ const faker = require('faker');
 const is    = require('is_js');
 const jsc   = require('jsverify');
 
-const {TypeBasis} = require('./util');
-
 describe('randomInt()', () => {
   test('it should throw Error', () => {
-    const inputs = new TypeBasis().withoutInteger().get();
+    const inputGenerator = jsc.oneof([
+      jsc.constant(undefined),
+      jsc.constant(null),
+      jsc.bool,
+      jsc.string,
+      jsc.array(jsc.json),
+      jsc.dict(jsc.json),
+      jsc.fn(jsc.json),
+    ]);
 
-    for (const input of inputs) {
+    jsc.assertForall(inputGenerator, (input) => {
       expect(() => randomInt(input, 0    )).toThrow(/min/);
       expect(() => randomInt(0    , input)).toThrow(/max/);
-    }
+
+      return true;
+    });
   });
 
   test('it should return integer between range of min and max', () => {

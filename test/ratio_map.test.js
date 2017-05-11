@@ -5,21 +5,29 @@ const is    = require('is_js');
 const jsc   = require('jsverify');
 
 const {
-  TypeBasis,
   jscPosInteger,
 } = require('./util');
 
 describe('RatioMap', () => {
   test('validate() should throw Error', () => {
-    const ratios = new TypeBasis()
-      .withoutUndefined()
-      .withoutInteger()
-      .get()
-      .map((v) => { return {a: v}; });
+    const valueGenerator = jsc.oneof([
+      jsc.constant(null),
+      jsc.bool,
+      jsc.string,
+      jsc.array(jsc.json),
+      jsc.dict(jsc.json),
+      jsc.fn(jsc.json),
+    ]);
+    const inputGenerator = jsc.dict(valueGenerator);
 
-    for (const ratio of ratios) {
-      expect(() => RatioMap.validate(ratio)).toThrow(/v_i/);
-    }
+    jsc.assertForall(inputGenerator, (input) => {
+      if (is.empty(input) && is.not.string(input) && is.not.array(input)) {
+        return true;
+      }
+      expect(() => RatioMap.validate(input)).toThrow(/v_i/);
+
+      return true;
+    });
   });
 
   test('randomKey() should return some key', () => {

@@ -5,41 +5,43 @@ const jsc      = require('jsverify');
 const MockDate = require('mockdate');
 const moment   = require('moment');
 
-const {
-  TypeBasis,
-} = require('../util');
-
 describe('DateGenerator', () => {
   afterEach(() => {
     MockDate.reset();
   });
 
   test('constructor() should throw Error', () => {
-    const now    = moment();
-    const inputs = [
-      ...(new TypeBasis()
-        .withoutUndefined()
-        .withoutJson()
-        .get()),
+    const valueGenerator = jsc.oneof([
+      jsc.constant(null),
+      jsc.bool,
+      jsc.number,
+      jsc.string,
+      jsc.array(jsc.json),
+      jsc.fn(jsc.json),
+    ]);
+    const valueGeneratorFrom = jsc.oneof([
+      jsc.constant(null),
+      jsc.bool,
+      jsc.array(jsc.json),
+      jsc.dict(jsc.json),
+      jsc.fn(jsc.json),
+    ]);
+    const valueGeneratorUntil = valueGeneratorFrom;
+    const inputGenerator = jsc.oneof([
+      valueGenerator,
+      jsc.record({from : valueGeneratorFrom }),
+      jsc.record({until: valueGeneratorUntil}),
+    ]);
 
-      ...(new TypeBasis()
-        .withoutUndefined()
-        .withoutInteger()
-        .get()
-        .map((v) => { return {from: v}; })),
-
-      ...(new TypeBasis()
-        .withoutUndefined()
-        .withoutInteger()
-        .get()
-        .map((v) => { return {until: v}; })),
-
-      {from: now.toDate(), until: now.subtract(1, 'milliseconds').toDate()}
-    ];
-
-    for (const input of inputs) {
+    jsc.assertForall(inputGenerator, (input) => {
       expect(() => new DateGenerator(input)).toThrow();
-    }
+
+      return true;
+    });
+
+    const now   = moment();
+    const input = {from: now.toDate(), until: now.subtract(1, 'milliseconds').toDate()};
+    expect(() => new DateGenerator(input)).toThrow(/satisfying/);
   });
 
   test('randomDate() should return recent Date', () => {

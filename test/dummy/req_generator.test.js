@@ -12,6 +12,7 @@ const jsc = require('jsverify');
 
 const {
   TypeBasis,
+  jscNegInteger,
   jscPosInteger,
 } = require('../util');
 
@@ -32,52 +33,80 @@ const statusCandidates     = Map(statusRatio).keySeq().toList();
 describe('ReqGenerator', () => {
   test('constructor() should throw Error', () => {
     const reqParamBase = Map({
-      method     : 'HEAD',
-      path       : '/index.html',
-      ratio      : 1,
-      statusRatio: {200: 1},
+      method     : jsc.string,
+      path       : jsc.string,
+      ratio      : jsc.nat,
+      statusRatio: jsc.dict(jsc.nat),
     });
+    const valueGenerator = jsc.oneof([
+      jsc.constant(undefined),
+      jsc.constant(null),
+      jsc.bool,
+      jsc.number,
+      jsc.string,
+      jsc.nearray(jsc.oneof([
+        jsc.constant(undefined),
+        jsc.constant(null),
+        jsc.bool,
+        jsc.number,
+        jsc.string,
+        jsc.array(jsc.json),
+        jsc.fn(jsc.json),
+      ])),
+      jsc.dict(jsc.json),
+      jsc.fn(jsc.json),
+    ]);
+    const valueGeneratorMethod = jsc.oneof([
+      jsc.constant(undefined),
+      jsc.constant(null),
+      jsc.bool,
+      jsc.number,
+      jsc.array(jsc.json),
+      jsc.dict(jsc.json),
+      jsc.fn(jsc.json),
+    ]);
+    const valueGeneratorPath = valueGeneratorMethod;
+    const valueGeneratorRatio = jsc.oneof([
+      jsc.constant(undefined),
+      jsc.constant(null),
+      jsc.bool,
+      jscNegInteger,
+      jsc.string,
+      jsc.array(jsc.json),
+      jsc.dict(jsc.json),
+      jsc.fn(jsc.json),
+    ]);
+    const valueGeneratorStatusRatio = jsc.oneof([
+      jsc.constant(undefined),
+      jsc.constant(null),
+      jsc.bool,
+      jsc.number,
+      jsc.string,
+      jsc.array(jsc.json),
+      jsc.record({200: jscNegInteger}),
+      jsc.fn(jsc.json),
+    ]);
+    const inputGenerator = jsc.oneof([
+      valueGenerator,
 
-    const inputs = [
-      ...(new TypeBasis()
-        .withoutArray()
-        .get()),
+      jsc.nearray(jsc.record(reqParamBase.set('method', valueGeneratorMethod).toJSON())),
+      jsc.nearray(jsc.record(reqParamBase.delete('method')                   .toJSON())),
 
-      ...(new TypeBasis()
-        .withoutJson()
-        .get()
-        .map((v) => [v])),
+      jsc.nearray(jsc.record(reqParamBase.set('path', valueGeneratorPath).toJSON())),
+      jsc.nearray(jsc.record(reqParamBase.delete('path')                 .toJSON())),
 
-      ...(new TypeBasis()
-        .withoutString()
-        .get()
-        .map((v) => reqParamBase.set('method', v).toJSON())),
-      [reqParamBase.delete('method').toJSON()],
+      jsc.nearray(jsc.record(reqParamBase.set('ratio', valueGeneratorRatio).toJSON())),
+      jsc.nearray(jsc.record(reqParamBase.delete('ratio')                  .toJSON())),
 
-      ...(new TypeBasis()
-        .withoutString()
-        .get()
-        .map((v) => reqParamBase.set('path', v).toJSON())),
-      [reqParamBase.delete('path').toJSON()],
+      jsc.nearray(jsc.record(reqParamBase.set('statusRatio', valueGeneratorStatusRatio).toJSON())),
+      jsc.nearray(jsc.record(reqParamBase.delete('statusRatio')                        .toJSON())),
+    ]);
 
-      ...(new TypeBasis()
-        .withoutZero()
-        .withoutPosInteger()
-        .get()
-        .map((v) => reqParamBase.set('ratio', v).toJSON())),
-      [reqParamBase.delete('ratio') .toJSON()],
-
-      ...(new TypeBasis()
-        .withoutJson()
-        .add({200: -1})
-        .get()
-        .map((v) => reqParamBase.set('statusRatio', v).toJSON())),
-      [reqParamBase.delete('statusRatio').toJSON()],
-    ];
-
-    for (const input of inputs) {
+    jsc.assertForall(inputGenerator, (input) => {
       expect(() => new ReqGenerator(input)).toThrow();
-    }
+
+      return true;
+    });
   });
 
   test('randomRequest() should return some request', () => {
@@ -140,112 +169,58 @@ describe('ReqGenerator', () => {
 describe('CrudReqGenerator', () => {
   test('constructor() should throw Error', () => {
     const reqParamBase = Map({
-      resource   : 'users',
-      methodRatio: Map({
-        POST  : Map({ratio: 1, statusRatio: {201: 1}}),
-        GET   : Map({ratio: 1, statusRatio: {200: 1}}),
-        PUT   : Map({ratio: 1, statusRatio: {200: 1}}),
-        DELETE: Map({ratio: 1, statusRatio: {204: 1}}),
+      resource   : jsc.string,
+      methodRatio: jsc.record({
+        POST  : jsc.record({ratio: jsc.nat, statusRatio: jsc.dict(jsc.nat)}),
+        GET   : jsc.record({ratio: jsc.nat, statusRatio: jsc.dict(jsc.nat)}),
+        PUT   : jsc.record({ratio: jsc.nat, statusRatio: jsc.dict(jsc.nat)}),
+        DELETE: jsc.record({ratio: jsc.nat, statusRatio: jsc.dict(jsc.nat)}),
       }),
     });
+    const valueGenerator = jsc.oneof([
+      jsc.constant(undefined),
+      jsc.constant(null),
+      jsc.bool,
+      jsc.number,
+      jsc.string,
+      jsc.array(jsc.json),
+      jsc.fn(jsc.json),
+    ]);
+    const valueGeneratorResource = jsc.oneof([
+      jsc.constant(undefined),
+      jsc.constant(null),
+      jsc.bool,
+      jsc.number,
+      jsc.array(jsc.json),
+      jsc.dict(jsc.json),
+      jsc.fn(jsc.json),
+    ]);
+    const valueGeneratorMethodRatio = jsc.oneof([
+      jsc.constant(undefined),
+      jsc.constant(null),
+      jsc.bool,
+      jsc.number,
+      jsc.string,
+      jsc.array(jsc.json),
+      jsc.record({HEAD: jsc.json}),
+      jsc.fn(jsc.json),
+    ]);
+    // Do not check contents of "methodRatio" because of test readability (and no warries)
+    const inputGenerator = jsc.oneof([
+      valueGenerator,
 
-    const inputs = [
-      ...(new TypeBasis()
-        .withoutJson()
-        .get()),
+      jsc.record(reqParamBase.set('resource', valueGeneratorResource).toJSON()),
+      jsc.record(reqParamBase.delete('resource')                     .toJSON()),
 
-      ...(new TypeBasis()
-        .withoutString()
-        .get()
-        .map((v) => reqParamBase.set('resource', v).toJS())),
-      reqParamBase.delete('resource').toJS(),
+      jsc.record(reqParamBase.set('methodRatio', valueGeneratorMethodRatio).toJSON()),
+      jsc.record(reqParamBase.delete('methodRatio')                        .toJSON()),
+    ]);
 
-      ...(new TypeBasis()
-        .withoutJson()
-        .add({HEAD: {ratio: 1, statusRatio: {201: 1}}})
-        .get()
-        .map((v) => reqParamBase.set('methodRatio', v).toJS())),
-      reqParamBase.delete('methodRatio').toJS(),
-
-      ...(new TypeBasis()
-        .withoutUndefined()
-        .withoutNull()
-        .withoutJson()
-        .get()
-        .map((v) => reqParamBase.setIn(['methodRatio', 'POST'], v).toJS())),
-      ...(new TypeBasis()
-        .withoutUndefined()
-        .withoutNull()
-        .withoutJson()
-        .get()
-        .map((v) => reqParamBase.setIn(['methodRatio', 'GET'], v).toJS())),
-      ...(new TypeBasis()
-        .withoutUndefined()
-        .withoutNull()
-        .withoutJson()
-        .get()
-        .map((v) => reqParamBase.setIn(['methodRatio', 'PUT'], v).toJS())),
-      ...(new TypeBasis()
-        .withoutUndefined()
-        .withoutNull()
-        .withoutJson()
-        .get()
-        .map((v) => reqParamBase.setIn(['methodRatio', 'DELETE'], v).toJS())),
-
-      ...(new TypeBasis()
-        .withoutZero()
-        .withoutPosInteger()
-        .get()
-        .map((v) => reqParamBase.setIn(['methodRatio', 'POST', 'ratio'], v).toJS())),
-      reqParamBase.deleteIn(['methodRatio', 'POST', 'ratio']).toJS(),
-      ...(new TypeBasis()
-        .withoutZero()
-        .withoutPosInteger()
-        .get()
-        .map((v) => reqParamBase.setIn(['methodRatio', 'GET', 'ratio'], v).toJS())),
-      reqParamBase.deleteIn(['methodRatio', 'GET', 'ratio']).toJS(),
-      ...(new TypeBasis()
-        .withoutZero()
-        .withoutPosInteger()
-        .get()
-        .map((v) => reqParamBase.setIn(['methodRatio', 'PUT', 'ratio'], v).toJS())),
-      reqParamBase.deleteIn(['methodRatio', 'PUT', 'ratio']).toJS(),
-      ...(new TypeBasis()
-        .withoutZero()
-        .withoutPosInteger()
-        .get()
-        .map((v) => reqParamBase.setIn(['methodRatio', 'DELETE', 'ratio'], v).toJS())),
-      reqParamBase.deleteIn(['methodRatio', 'DELETE', 'ratio']).toJS(),
-
-      ...(new TypeBasis()
-        .withoutJson()
-        .add({200: -1})
-        .get()
-        .map((v) => reqParamBase.setIn(['methodRatio', 'POST', 'statusRatio'], v).toJS())),
-      reqParamBase.deleteIn(['methodRatio', 'POST', 'statusRatio']).toJS(),
-      ...(new TypeBasis()
-        .withoutJson()
-        .add({200: -1})
-        .get()
-        .map((v) => reqParamBase.setIn(['methodRatio', 'GET', 'statusRatio'], v).toJS())),
-      reqParamBase.deleteIn(['methodRatio', 'GET', 'statusRatio']).toJS(),
-      ...(new TypeBasis()
-        .withoutJson()
-        .add({200: -1})
-        .get()
-        .map((v) => reqParamBase.setIn(['methodRatio', 'PUT', 'statusRatio'], v).toJS())),
-      reqParamBase.deleteIn(['methodRatio', 'PUT', 'statusRatio']).toJS(),
-      ...(new TypeBasis()
-        .withoutJson()
-        .add({200: -1})
-        .get()
-        .map((v) => reqParamBase.setIn(['methodRatio', 'DELETE', 'statusRatio'], v).toJS())),
-      reqParamBase.deleteIn(['methodRatio', 'DELETE', 'statusRatio']).toJS(),
-    ];
-
-    for (const input of inputs) {
+    jsc.assertForall(inputGenerator, (input) => {
       expect(() => new CrudReqGenerator(input)).toThrow();
-    }
+
+      return true;
+    });
   });
 
   test('randomRequest() should return some crud request', () => {

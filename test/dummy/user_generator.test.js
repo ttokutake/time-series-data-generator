@@ -1,63 +1,80 @@
 const UserGenerator = require('../../lib/dummy/user_generator');
 
 const {
-  fromJS
+  Map,
 } = require('immutable');
 const is  = require('is_js');
 const jsc = require('jsverify');
 
 const {
-  TypeBasis,
   jscPosInteger,
+  jscNegInteger,
 } = require('../util');
 
 describe('UserGenerator', () => {
   test('constructor() should throw Error', () => {
-    const userParamBase = fromJS({
-      num      : 1,
-      typeRatio: {
-        anonymous: 1,
-        normal   : 1,
-      },
+    const typeRatioBase = Map({
+      anonymous: jsc.nat,
+      normal   : jsc.nat,
     });
+    const userParamBase = Map({
+      num      : jsc.nat,
+      typeRatio: jsc.record(typeRatioBase.toJSON()),
+    });
+    const valueGenerator = jsc.oneof([
+      jsc.constant(undefined),
+      jsc.constant(null),
+      jsc.bool,
+      jsc.number,
+      jsc.string,
+      jsc.array(jsc.json),
+      jsc.fn(jsc.json),
+    ]);
+    const valueGeneratorNum = jsc.oneof([
+      jsc.constant(undefined),
+      jsc.constant(null),
+      jsc.bool,
+      jscNegInteger,
+      jsc.string,
+      jsc.array(jsc.json),
+      jsc.dict(jsc.json),
+      jsc.fn(jsc.json),
+    ]);
+    const valueGeneratorTypeRatio = jsc.oneof([
+      jsc.constant(null),
+      jsc.bool,
+      jsc.number,
+      jsc.string,
+      jsc.array(jsc.json),
+      jsc.fn(jsc.json),
+    ]);
+    const valueGeneratorTypeRatioAnonymous = jsc.oneof([
+      jsc.constant(null),
+      jsc.bool,
+      jscNegInteger,
+      jsc.string,
+      jsc.array(jsc.json),
+      jsc.dict(jsc.json),
+      jsc.fn(jsc.json),
+    ]);
+    const valueGeneratorTypeRatioNormal = valueGeneratorTypeRatioAnonymous;
+    const inputGenerator = jsc.oneof([
+      valueGenerator,
 
-    const inputs = [
-      ...(new TypeBasis()
-        .withoutJson()
-        .get()),
+      jsc.record(userParamBase.set('num', valueGeneratorNum).toJSON()),
+      jsc.record(userParamBase.delete('num')                .toJSON()),
 
-      ...(new TypeBasis()
-        .withoutZero()
-        .withoutPosInteger()
-        .get()
-        .map((v) => userParamBase.set('num', v).toJS())),
-      userParamBase.delete('num') .toJS(),
+      jsc.record(userParamBase.set('typeRatio', valueGeneratorTypeRatio).toJSON()),
+      jsc.record(userParamBase.set('typeRatio', jsc.record(typeRatioBase.set('anonymous', valueGeneratorTypeRatioAnonymous).toJSON())).toJSON()),
+      jsc.record(userParamBase.set('typeRatio', jsc.record(typeRatioBase.set('normal'   , valueGeneratorTypeRatioNormal   ).toJSON())).toJSON()),
+      jsc.record(userParamBase.set('typeRatio', jsc.record(typeRatioBase.set('premium'  , jsc.json                        ).toJSON())).toJSON()),
+    ]);
 
-      ...(new TypeBasis()
-        .withoutUndefined()
-        .withoutJson()
-        .add({premium: 1})
-        .get()
-        .map((v) => userParamBase.set('typeRatio', v).toJS())),
-
-      ...(new TypeBasis()
-        .withoutUndefined()
-        .withoutZero()
-        .withoutPosInteger()
-        .get()
-        .map((v) => userParamBase.setIn(['typeRatio', 'anonymous'], v).toJS())),
-
-      ...(new TypeBasis()
-        .withoutUndefined()
-        .withoutZero()
-        .withoutPosInteger()
-        .get()
-        .map((v) => userParamBase.setIn(['typeRatio', 'normal'], v).toJS())),
-    ];
-
-    for (const input of inputs) {
+    jsc.assertForall(inputGenerator, (input) => {
       expect(() => new UserGenerator(input)).toThrow();
-    }
+
+      return true;
+    });
   });
 
   test('randomUser() should return some user', () => {
@@ -70,8 +87,8 @@ describe('UserGenerator', () => {
         typeRatio: jsc.oneof([
           jsc.constant(undefined),
           jsc.record({
-            anonymous: jsc.oneof([jsc.constant(undefined), jsc.nat()]),
-            normal   : jsc.oneof([jsc.constant(undefined), jsc.nat()]),
+            anonymous: jsc.oneof([jsc.constant(undefined), jsc.nat]),
+            normal   : jsc.oneof([jsc.constant(undefined), jsc.nat]),
           }),
         ]),
       }),
@@ -119,10 +136,10 @@ describe('UserGenerator', () => {
 
   test('all() should return all users', () => {
     const inputGenerator = jsc.record({
-      num: jscPosInteger,
+      num: jsc.nat,
       typeRatio: jsc.record({
-        anonymous: jsc.nat(),
-        normal   : jsc.nat(),
+        anonymous: jsc.nat,
+        normal   : jsc.nat,
       }),
     });
     jsc.assertForall(inputGenerator, (input) => {
