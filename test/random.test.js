@@ -28,7 +28,7 @@ describe('randomInt()', () => {
   });
 
   test('it should return integer between range of min and max', () => {
-    jsc.assertForall(jsc.integer(), jsc.integer(), (x, y) => {
+    jsc.assertForall(jsc.integer, jsc.integer, (x, y) => {
       const [min, max] = x < y ? [x, y] : [y, x];
       const output     = randomInt(min, max);
       return min <= output && output <= max;
@@ -36,7 +36,7 @@ describe('randomInt()', () => {
   });
 
   test('it should return null', () => {
-    jsc.assertForall(jsc.integer(), jsc.integer(), (x, y) => {
+    jsc.assertForall(jsc.integer, jsc.integer, (x, y) => {
       if (x === y) {
         return true;
       }
