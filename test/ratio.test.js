@@ -1,4 +1,4 @@
-const RatioMap = require('../lib/ratio_map');
+const Ratio = require('../lib/ratio');
 
 const {Map} = require('immutable');
 const is    = require('is_js');
@@ -8,7 +8,7 @@ const {
   jscPosInteger,
 } = require('./util');
 
-describe('RatioMap', () => {
+describe('Ratio', () => {
   test('validate() should throw Error', () => {
     const valueGenerator = jsc.oneof([
       jsc.constant(null),
@@ -24,7 +24,7 @@ describe('RatioMap', () => {
       if (is.empty(input) && is.not.string(input) && is.not.array(input)) {
         return true;
       }
-      expect(() => RatioMap.validate(input)).toThrow(/v_i/);
+      expect(() => Ratio.validate(input)).toThrow(/v_i/);
 
       return true;
     });
@@ -36,14 +36,14 @@ describe('RatioMap', () => {
         return true;
       }
       const candidates = Map(input).keySeq();
-      const output     = new RatioMap(input).randomKey();
+      const output     = new Ratio(input).randomKey();
       return candidates.includes(output);
     });
   });
 
   test('randomKey() should return null', () => {
     jsc.assertForall(jsc.dict(jsc.elements([undefined, 0])), (input) => {
-      const output = new RatioMap(input).randomKey();
+      const output = new Ratio(input).randomKey();
       return is.null(output);
     });
   });
@@ -54,7 +54,7 @@ describe('RatioMap', () => {
       'non-selected': jsc.elements([undefined, 0]),
     });
     jsc.assertForall(inputGenerator, (input) => {
-      const output = new RatioMap(input).randomKey();
+      const output = new Ratio(input).randomKey();
       return output === 'selected';
     });
   });
@@ -69,7 +69,7 @@ describe('RatioMap', () => {
     ];
 
     for (const [ratio, expected] of data) {
-      const ratioMap = new RatioMap(ratio);
+      const ratioMap = new Ratio(ratio);
       expect(ratioMap.ranges.toJSON()).toEqual(expected);
     }
   });
@@ -84,7 +84,7 @@ describe('RatioMap', () => {
     ];
 
     for (const [ratio, expected] of data) {
-      const ratioMap = new RatioMap(ratio);
+      const ratioMap = new Ratio(ratio);
       expect(ratioMap.max).toEqual(expected);
     }
   });
