@@ -6,6 +6,7 @@ const jsc   = require('jsverify');
 
 const {
   jscPosInteger,
+  jscNonPosInteger,
 } = require('./util');
 
 describe('Ratio', () => {
@@ -35,6 +36,7 @@ describe('Ratio', () => {
       if (is.empty(input)) {
         return true;
       }
+
       const candidates = Map(input).keySeq();
       const output     = new Ratio(input).randomKey();
       return candidates.includes(output);
@@ -42,7 +44,9 @@ describe('Ratio', () => {
   });
 
   test('randomKey() should return null', () => {
-    jsc.assertForall(jsc.dict(jsc.elements([null, 0])), (input) => {
+    const inputGenerator = jsc.dict(jsc.oneof([jsc.constant(null), jscNonPosInteger]));
+
+    jsc.assertForall(inputGenerator, (input) => {
       const output = new Ratio(input).randomKey();
       return is.null(output);
     });
@@ -51,8 +55,9 @@ describe('Ratio', () => {
   test('randomKey() should return some key whose "ratio" is not 0', () => {
     const inputGenerator = jsc.record({
       selected      : jscPosInteger,
-      'non-selected': jsc.elements([null, 0]),
+      'non-selected': jsc.oneof([jsc.constant(null), jscNonPosInteger]),
     });
+
     jsc.assertForall(inputGenerator, (input) => {
       const output = new Ratio(input).randomKey();
       return output === 'selected';

@@ -1,9 +1,9 @@
 const jsc = require('jsverify');
 
-const jscPosInteger = jsc.nat.smap((x) => x + 1   , (x) => x - 1   );
-const jscNegInteger = jsc.nat.smap((x) => -(x + 1), (x) => -(x - 1));
+const jscPosInteger    = jsc.nat.smap((x) => x + 1, (x) => x - 1);
+const jscNonPosInteger = jsc.nat.smap((x) => -x   , (x) => -x   );
 
 module.exports = {
-  jscNegInteger,
   jscPosInteger,
+  jscNonPosInteger,
 }
