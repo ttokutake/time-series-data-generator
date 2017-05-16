@@ -31,35 +31,35 @@ describe('Ratio', () => {
     });
   });
 
-  test('randomKey() should return some key', () => {
+  test('sample() should return some key', () => {
     jsc.assertForall(jsc.dict(jscPosInteger), (input) => {
       if (is.empty(input)) {
         return true;
       }
 
       const candidates = Map(input).keySeq();
-      const output     = new Ratio(input).randomKey();
+      const output     = new Ratio(input).sample();
       return candidates.includes(output);
     });
   });
 
-  test('randomKey() should return null', () => {
+  test('sample() should return null', () => {
     const inputGenerator = jsc.dict(jsc.oneof([jsc.constant(null), jscNonPosInteger]));
 
     jsc.assertForall(inputGenerator, (input) => {
-      const output = new Ratio(input).randomKey();
+      const output = new Ratio(input).sample();
       return is.null(output);
     });
   });
 
-  test('randomKey() should return some key whose "ratio" is not 0', () => {
+  test('sample() should return some key whose "ratio" is not 0', () => {
     const inputGenerator = jsc.record({
       selected      : jscPosInteger,
       'non-selected': jsc.oneof([jsc.constant(null), jscNonPosInteger]),
     });
 
     jsc.assertForall(inputGenerator, (input) => {
-      const output = new Ratio(input).randomKey();
+      const output = new Ratio(input).sample();
       return output === 'selected';
     });
   });
