@@ -1,2 +1,2 @@
-# dummy-json-generator
-Generate dummy json
+# time-series-data-generator
+Generate time series data
