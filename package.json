@@ -1,28 +1,18 @@
 {
-  "name": "dummy-json-generator",
+  "name": "time-series-data-generator",
   "version": "0.0.1",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "next",
-    "build": "next build",
-    "start": "next start",
     "test": "jest"
   },
   "dependencies": {
     "faker": "^4.1.0",
     "immutable": "^3.8.1",
-    "is_js": "^0.9.0",
-    "jsonschema": "^1.1.1",
-    "moment": "^2.18.1",
-    "next": "^2.3.1",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "is_js": "^0.9.0"
   },
   "devDependencies": {
-    "escape-string-regexp": "^1.0.5",
     "jest": "^19.0.2",
-    "jsverify": "^0.8.2",
-    "mockdate": "^2.0.1"
+    "jsverify": "^0.8.2"
   }
 }
