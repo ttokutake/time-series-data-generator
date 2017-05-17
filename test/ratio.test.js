@@ -12,7 +12,7 @@ const {
 describe('Ratio', () => {
   test('validate() should throw Error', () => {
     const valueGenerator = jsc.oneof([
-      jsc.constant(undefined),
+      jsc.constant(null),
       jsc.bool,
       jsc.string,
       jsc.array(jsc.json),
@@ -44,7 +44,7 @@ describe('Ratio', () => {
   });
 
   test('sample() should return null', () => {
-    const inputGenerator = jsc.dict(jsc.oneof([jsc.constant(null), jscNonPosInteger]));
+    const inputGenerator = jsc.dict(jsc.oneof([jsc.constant(undefined), jscNonPosInteger]));
 
     jsc.assertForall(inputGenerator, (input) => {
       const output = new Ratio(input).sample();
@@ -55,7 +55,7 @@ describe('Ratio', () => {
   test('sample() should return some key whose "ratio" is not 0', () => {
     const inputGenerator = jsc.record({
       selected      : jscPosInteger,
-      'non-selected': jsc.oneof([jsc.constant(null), jscNonPosInteger]),
+      'non-selected': jsc.oneof([jsc.constant(undefined), jscNonPosInteger]),
     });
 
     jsc.assertForall(inputGenerator, (input) => {
