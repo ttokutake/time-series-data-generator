@@ -3,9 +3,8 @@ const {
   seed,
 } = require('../lib/random');
 
-const faker = require('faker');
-const is    = require('is_js');
-const jsc   = require('jsverify');
+const is  = require('is_js');
+const jsc = require('jsverify');
 
 describe('randomInt()', () => {
   test('it should throw Error', () => {
@@ -49,5 +48,5 @@ describe('randomInt()', () => {
 
 test('seed() should fix random number table', () => {
   seed(1);
-  expect(randomInt(0, 1000)).toBe(417);
+  expect(randomInt(0, 1000)).toBe(269);
 });
