@@ -25,7 +25,7 @@ describe('Ratio', () => {
       if (is.empty(input) && is.not.string(input) && is.not.array(input)) {
         return true;
       }
-      expect(() => Ratio.validate(input)).toThrow(/v_i/);
+      expect(() => Ratio.validate(input)).toThrow(/params/);
 
       return true;
     });
