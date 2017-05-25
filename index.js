@@ -8,9 +8,9 @@ const series = new Series({from, until, interval});
 const coefficient = 1;
 const constant    = 0;
 const period      = 1 * 60 * 60; // seconds
-const series_cos = series.cos({coefficient, constant, period});
+const series_cos = series.cos({keyName: 'alpha', coefficient, constant, period});
 console.log(series_cos);
-const series_sin = series.sin({coefficient, constant, period});
+const series_sin = series.sin({keyName: 'beta', coefficient, constant, period});
 console.log(series_sin);
 
 const params = {
@@ -18,5 +18,5 @@ const params = {
   scissors: 2,
   paper   : 1,
 };
-const series_ratio = series.ratio(params);
+const series_ratio = series.ratio(params, {keyName: 'state'});
 console.log(series_ratio);
