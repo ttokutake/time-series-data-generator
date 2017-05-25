@@ -9,15 +9,16 @@ const coefficient   = 1;
 const constant      = 0;
 const decimalDigits = 3;
 const period        = 1 * 60 * 60; // seconds
-const series_cos = series.cos({keyName: 'alpha', coefficient, constant, decimalDigits, period});
-console.log(series_cos);
-const series_sin = series.sin({keyName: 'beta', coefficient, constant, decimalDigits, period});
-console.log(series_sin);
+console.log(series.cos({keyName: 'alpha', coefficient, constant, decimalDigits, period}));
+console.log(series.sin({keyName: 'beta', coefficient, constant, decimalDigits, period}));
 
 const params = {
   rock    : 2,
   scissors: 2,
   paper   : 1,
 };
-const series_ratio = series.ratio(params, {keyName: 'state'});
-console.log(series_ratio);
+console.log(series.ratio(params, {keyName: 'state'}));
+
+const numOfPoints = 10;
+const series_random = new Series({type: 'random', from, until, numOfPoints});
+console.log(series_random.ratio(params, {keyName: 'light'}));
