@@ -158,6 +158,67 @@ describe('Series', () => {
     expect(output).toEqual({timestamp: '2017-05-26T00:00:00.000Z', some: 1});
   });
 
+  test('_trigonometric() should throw Error', () => {
+    const series = new Series();
+
+    const inputGenerator = jsc.oneof([
+      jsc.constant(null),
+      jsc.bool,
+      jsc.number,
+      jsc.string,
+      jsc.array(jsc.json),
+      jsc.fn(jsc.json),
+
+      jsc.record({
+        coefficient: jsc.oneof([
+          jsc.constant(null),
+          jsc.bool,
+          jsc.string,
+          jsc.array(jsc.json),
+          jsc.dict(jsc.json),
+          jsc.fn(jsc.json),
+        ]),
+      }),
+      jsc.record({
+        constant: jsc.oneof([
+          jsc.constant(null),
+          jsc.bool,
+          jsc.string,
+          jsc.array(jsc.json),
+          jsc.dict(jsc.json),
+          jsc.fn(jsc.json),
+        ]),
+      }),
+      jsc.record({
+        decimalDigits: jsc.oneof([
+          jsc.constant(null),
+          jsc.bool,
+          jsc.string,
+          jsc.array(jsc.json),
+          jsc.dict(jsc.json),
+          jsc.fn(jsc.json),
+        ]),
+      }),
+      jsc.record({
+        period: jsc.oneof([
+          jsc.constant(null),
+          jsc.bool,
+          jsc.string,
+          jsc.array(jsc.json),
+          jsc.dict(jsc.json),
+          jsc.fn(jsc.json),
+        ]),
+      }),
+    ]);
+
+    jsc.assertForall(inputGenerator, (input) => {
+      expect(() => series.sin(input)).toThrow(/options/);
+      expect(() => series.cos(input)).toThrow(/options/);
+
+      return true;
+    });
+  });
+
   describe('sin()', () => {
     const from        = '2016-01-01T00:00:00Z';
     const until       = '2016-01-01T01:00:00Z';
