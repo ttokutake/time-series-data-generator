@@ -92,8 +92,10 @@ describe('Series', () => {
       const interval  = 10 * 60; // seconds
       const numOfData = 5;
 
-      const outputDefault      = new Series({                    from, until, interval})._range().toJSON();
-      const outputMonospaced   = new Series({type: 'monospaced', from, until, interval})._range().toJSON();
+      const series           = new Series({                    from, until, interval});
+      const seriesMonospaced = new Series({type: 'monospaced', from, until, interval});
+      const outputDefault      = series          ._range().toJSON();
+      const outputMonospaced   = seriesMonospaced._range().toJSON();
       const expectedMonospaced = [
         1451606400,
         1451607000,
@@ -106,8 +108,9 @@ describe('Series', () => {
       expect(outputDefault   ).toEqual(expectedMonospaced);
       expect(outputMonospaced).toEqual(expectedMonospaced);
 
+      const seriesRandom = new Series({type: 'random', from, until, numOfData});
       jsc.assertForall(jsc.unit, () => {
-        const outputRandom = new Series({type: 'random', from, until, numOfData})._range();
+        const outputRandom = seriesRandom._range();
         expect(outputRandom.size).toBe(numOfData);
         expect(outputRandom.every((unix) => 1451606400 <= unix && unix <= 1451610000)).toBeTruthy();
         expect(outputRandom).toEqual(outputRandom.sort());
@@ -119,8 +122,10 @@ describe('Series', () => {
     test('it should return unix timestamp series by default options', () => {
       MockDate.set('2017-05-26T00:00:00Z');
 
-      const outputDefault      = new Series(                    )._range().toJSON();
-      const outputMonospaced   = new Series({type: 'monospaced'})._range().toJSON();
+      const series           = new Series({                  });
+      const seriesMonospaced = new Series({type: 'monospaced'});
+      const outputDefault      = series          ._range().toJSON();
+      const outputMonospaced   = seriesMonospaced._range().toJSON();
       const expectedMonospaced = [
         1495753200,
         1495753500,
@@ -139,8 +144,9 @@ describe('Series', () => {
       expect(outputDefault   ).toEqual(expectedMonospaced);
       expect(outputMonospaced).toEqual(expectedMonospaced);
 
+      const seriesRandom = new Series({type: 'random'});
       jsc.assertForall(jsc.unit, () => {
-        const outputRandom = new Series({type: 'random'})._range();
+        const outputRandom = seriesRandom._range();
         expect(outputRandom.size).toBe(10);
         expect(outputRandom.every((unix) => 1495753200 <= unix && unix <= 1495756800)).toBeTruthy();
         expect(outputRandom).toEqual(outputRandom.sort());
@@ -226,14 +232,16 @@ describe('Series', () => {
       const interval  = 10 * 60; // seconds
       const numOfData = 5;
 
+      const series       = new Series({from, until, interval})
+      const seriesRandom = new Series({type: 'random', from, until, numOfData});
+
       test('it should return sine curve', () => {
         const coefficient   = 2;
         const constant      = 1;
         const decimalDigits = 1;
         const period        = 2 * 60 * 60; // seconds
 
-        const outputMonospaced = new Series({from, until, interval})
-          .sin({coefficient, constant, decimalDigits, period});
+        const outputMonospaced = series.sin({coefficient, constant, decimalDigits, period});
         const expectedMonospaced = [
           {timestamp: '2016-01-01T00:00:00.000Z', value: 1  },
           {timestamp: '2016-01-01T00:10:00.000Z', value: 2  },
@@ -246,8 +254,7 @@ describe('Series', () => {
         expect(outputMonospaced).toEqual(expectedMonospaced);
 
         jsc.assertForall(jsc.unit, () => {
-          const outputRandom = new Series({type: 'random', from, until, numOfData})
-            .sin({coefficient, constant, decimalDigits, period});
+          const outputRandom = seriesRandom.sin({coefficient, constant, decimalDigits, period});
           expect(outputRandom.length).toBe(5);
           expect(outputRandom.every(({timestamp, value}) => {
             return (
@@ -262,7 +269,7 @@ describe('Series', () => {
       });
 
       test('it should return sine curve by default options', () => {
-        const outputMonospaced   = new Series({from, until, interval}).sin();
+        const outputMonospaced   = series.sin();
         const expectedMonospaced = [
           {timestamp: '2016-01-01T00:00:00.000Z', value: 0    },
           {timestamp: '2016-01-01T00:10:00.000Z', value: 0.87 },
@@ -275,7 +282,7 @@ describe('Series', () => {
         expect(outputMonospaced).toEqual(expectedMonospaced);
 
         jsc.assertForall(jsc.unit, () => {
-          const outputRandom = new Series({type: 'random', from, until, numOfData}).sin();
+          const outputRandom = seriesRandom.sin();
           expect(outputRandom.length).toBe(5);
           expect(outputRandom.every(({timestamp, value}) => {
             return (
@@ -296,14 +303,16 @@ describe('Series', () => {
       const interval  = 10 * 60; // seconds
       const numOfData = 5;
 
+      const series       = new Series({from, until, interval});
+      const seriesRandom = new Series({type: 'random', from, until, numOfData});
+
       test('it should return cosine curve', () => {
         const coefficient   = 2;
         const constant      = 1;
         const decimalDigits = 1;
         const period        = 2 * 60 * 60; // seconds
 
-        const outputMonospaced = new Series({from, until, interval})
-          .cos({coefficient, constant, decimalDigits, period});
+        const outputMonospaced = series.cos({coefficient, constant, decimalDigits, period});
         const expectedMonospaced = [
           {timestamp: '2016-01-01T00:00:00.000Z', value: 3   },
           {timestamp: '2016-01-01T00:10:00.000Z', value: 2.7 },
@@ -316,8 +325,7 @@ describe('Series', () => {
         expect(outputMonospaced).toEqual(expectedMonospaced);
 
         jsc.assertForall(jsc.unit, () => {
-          const outputRandom = new Series({type: 'random', from, until, numOfData})
-            .cos({coefficient, constant, decimalDigits, period});
+          const outputRandom = seriesRandom.cos({coefficient, constant, decimalDigits, period});
           expect(outputRandom.length).toBe(5);
           expect(outputRandom.every(({timestamp, value}) => {
             return (
@@ -332,7 +340,7 @@ describe('Series', () => {
       });
 
       test('it should return cosine curve by default options', () => {
-        const outputMonospaced   = new Series({from, until, interval}).cos();
+        const outputMonospaced   = series.cos();
         const expectedMonospaced = [
           {timestamp: '2016-01-01T00:00:00.000Z', value: 1   },
           {timestamp: '2016-01-01T00:10:00.000Z', value: 0.5 },
@@ -345,7 +353,7 @@ describe('Series', () => {
         expect(outputMonospaced).toEqual(expectedMonospaced);
 
         jsc.assertForall(jsc.unit, () => {
-          const outputRandom = new Series({type: 'random', from, until, numOfData}).cos();
+          const outputRandom = seriesRandom.cos();
           expect(outputRandom.length).toBe(5);
           expect(outputRandom.every(({timestamp, value}) => {
             return (
@@ -367,6 +375,9 @@ describe('Series', () => {
     const interval  = 10 * 60; // seconds
     const numOfData = 5;
 
+    const series       = new Series({from, until, interval});
+    const seriesRandom = new Series({type: 'random', from, until, numOfData});
+
     const params = {
       rock    : 2,
       scissors: 2,
@@ -374,7 +385,7 @@ describe('Series', () => {
     };
 
     jsc.assertForall(jsc.unit, () => {
-      const outputMonospaced = new Series({from, until, interval}).ratio(params);
+      const outputMonospaced = series.ratio(params);
       expect(outputMonospaced.length).toBe(7);
       expect(outputMonospaced.every(({timestamp, value}) => {
         return (
@@ -384,7 +395,7 @@ describe('Series', () => {
         );
       })).toBeTruthy();
 
-      const outputRandom = new Series({type: 'random', from, until, numOfData}).ratio(params);
+      const outputRandom = seriesRandom.ratio(params);
       expect(outputRandom.length).toBe(5);
       expect(outputRandom.every(({timestamp, value}) => {
         return (
@@ -449,17 +460,20 @@ describe('Series', () => {
       });
     });
 
-    test('it should return time series data with 1', () => {
-      const from      = '2016-01-01T00:00:00Z';
-      const until     = '2016-01-01T01:00:00Z';
-      const interval  = 10 * 60; // seconds
-      const numOfData = 5;
+    const from      = '2016-01-01T00:00:00Z';
+    const until     = '2016-01-01T01:00:00Z';
+    const interval  = 10 * 60; // seconds
+    const numOfData = 5;
 
+    const series       = new Series({from, until, interval});
+    const seriesRandom = new Series({type: 'random', from, until, numOfData});
+
+    test('it should return time series data with 1', () => {
       const mean     = 1;
       const variance = 0;
 
       jsc.assertForall(jsc.unit, () => {
-        const outputMonospaced = new Series({from, until, interval}).gaussian({mean, variance});
+        const outputMonospaced = series.gaussian({mean, variance});
         expect(outputMonospaced.length).toBe(7);
         expect(outputMonospaced.every(({timestamp, value}) => {
           return (
@@ -469,7 +483,7 @@ describe('Series', () => {
           );
         })).toBeTruthy();
 
-        const outputRandom = new Series({type: 'random', from, until, numOfData}).gaussian({mean, variance});
+        const outputRandom = seriesRandom.gaussian({mean, variance});
         expect(outputRandom.length).toBe(5);
         expect(outputRandom.every(({timestamp, value}) => {
           return (
@@ -484,25 +498,18 @@ describe('Series', () => {
     });
 
     test('it should return time series numbers with gaussian distribution', () => {
-      const from      = '2016-01-01T00:00:00Z';
-      const until     = '2016-01-01T01:00:00Z';
-      const interval  = 10 * 60; // seconds
-      const numOfData = 5;
-
       const mean          = 1;
       const variance      = 0.1;
       const decimalDigits = 1;
 
       jsc.assertForall(jsc.unit, () => {
-        const outputMonospaced = new Series({from, until, interval})
-          .gaussian({mean, variance, decimalDigits});
+        const outputMonospaced = series.gaussian({mean, variance, decimalDigits});
         expect(outputMonospaced.length).toBe(7);
         expect(outputMonospaced.every(({timestamp, value}) => {
           return '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z';
         })).toBeTruthy();
 
-        const outputRandom = new Series({type: 'random', from, until, numOfData})
-          .gaussian({mean, variance, decimalDigits});
+        const outputRandom = seriesRandom.gaussian({mean, variance, decimalDigits});
         expect(outputRandom.length).toBe(5);
         expect(outputRandom.every(({timestamp, value}) => {
           return '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z';
@@ -513,19 +520,14 @@ describe('Series', () => {
     });
 
     test('it should return time series numbers with gaussian distribution by default options', () => {
-      const from      = '2016-01-01T00:00:00Z';
-      const until     = '2016-01-01T01:00:00Z';
-      const interval  = 10 * 60; // seconds
-      const numOfData = 5;
-
       jsc.assertForall(jsc.unit, () => {
-        const outputMonospaced = new Series({from, until, interval}).gaussian();
+        const outputMonospaced = series.gaussian();
         expect(outputMonospaced.length).toBe(7);
         expect(outputMonospaced.every(({timestamp, value}) => {
           return '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z';
         })).toBeTruthy();
 
-        const outputRandom = new Series({type: 'random', from, until, numOfData}).gaussian();
+        const outputRandom = seriesRandom.gaussian();
         expect(outputRandom.length).toBe(5);
         expect(outputRandom.every(({timestamp, value}) => {
           return '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z';
