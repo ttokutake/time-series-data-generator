@@ -953,6 +953,10 @@ istanbul-reports@^1.1.0:
   dependencies:
     handlebars "^4.0.3"
 
+jStat@^1.6.1:
+  version "1.6.1"
+  resolved "https://registry.yarnpkg.com/jStat/-/jStat-1.6.1.tgz#302a28b731c29b964ae433157b4b0e2f6f3bff05"
+
 jest-changed-files@^19.0.2:
   version "19.0.2"
   resolved "https://registry.yarnpkg.com/jest-changed-files/-/jest-changed-files-19.0.2.tgz#16c54c84c3270be408e06d2e8af3f3e37a885824"

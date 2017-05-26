@@ -22,3 +22,5 @@ console.log(series.ratio(params, {keyName: 'state'}));
 const numOfPoints = 10;
 const series_random = new Series({type: 'random', from, until, numOfPoints});
 console.log(series_random.ratio(params, {keyName: 'light'}));
+
+console.log(series.gaussian());
