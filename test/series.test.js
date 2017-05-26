@@ -1,5 +1,6 @@
 const Series = require('../lib/series');
 
+const {List}   = require('immutable');
 const jsc      = require('jsverify');
 const MockDate = require('mockdate');
 
@@ -158,7 +159,7 @@ describe('Series', () => {
       const coefficient   = 2;
       const constant      = 1;
       const decimalDigits = 1;
-      const period        = 2 * 60 * 60;
+      const period        = 2 * 60 * 60; // seconds
 
       const outputMonospaced = new Series({from, until, interval})
         .sin({keyName, coefficient, constant, decimalDigits, period});
@@ -229,7 +230,7 @@ describe('Series', () => {
       const coefficient   = 2;
       const constant      = 1;
       const decimalDigits = 1;
-      const period        = 2 * 60 * 60;
+      const period        = 2 * 60 * 60; // seconds
 
       const outputMonospaced = new Series({from, until, interval})
         .cos({keyName, coefficient, constant, decimalDigits, period});
@@ -289,6 +290,70 @@ describe('Series', () => {
     });
   });
 
-  test('ratio() should return time series data', () => {
+  describe('ratio()', () => {
+    const from        = '2016-01-01T00:00:00Z';
+    const until       = '2016-01-01T01:00:00Z';
+    const interval    = 10 * 60; // seconds
+    const numOfPoints = 5;
+
+    const params = {
+      rock    : 2,
+      scissors: 2,
+      paper   : 1,
+    };
+
+    test('it should return time series data', () => {
+      const keyName = 'state';
+
+      jsc.assertForall(jsc.unit, () => {
+        const outputMonospaced = new Series({from, until, interval}).ratio(params, {keyName});
+        expect(outputMonospaced.length).toBe(7);
+        expect(outputMonospaced.every(({timestamp, state}) => {
+          return (
+            '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z'
+          ) && (
+            List(['rock', 'scissors', 'paper']).includes(state)
+          );
+        })).toBeTruthy();
+
+        const outputRandom = new Series({type: 'random', from, until, numOfPoints}).ratio(params, {keyName});
+        expect(outputRandom.length).toBe(5);
+        expect(outputRandom.every(({timestamp, state}) => {
+          return (
+            '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z'
+          ) && (
+            List(['rock', 'scissors', 'paper']).includes(state)
+          );
+        })).toBeTruthy();
+
+        return true;
+      });
+    });
+
+    test('it should return time series data by default options', () => {
+      jsc.assertForall(jsc.unit, () => {
+        const outputMonospaced = new Series({from, until, interval}).ratio(params);
+        expect(outputMonospaced.length).toBe(7);
+        expect(outputMonospaced.every(({timestamp, value}) => {
+          return (
+            '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z'
+          ) && (
+            List(['rock', 'scissors', 'paper']).includes(value)
+          );
+        })).toBeTruthy();
+
+        const outputRandom = new Series({type: 'random', from, until, numOfPoints}).ratio(params);
+        expect(outputRandom.length).toBe(5);
+        expect(outputRandom.every(({timestamp, value}) => {
+          return (
+            '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z'
+          ) && (
+            List(['rock', 'scissors', 'paper']).includes(value)
+          );
+        })).toBeTruthy();
+
+        return true;
+      });
+    });
   });
 });
