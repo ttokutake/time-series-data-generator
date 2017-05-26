@@ -19,8 +19,8 @@ const params = {
 };
 console.log(series.ratio(params));
 
-const numOfPoints = 10;
-const series_random = new Series({type: 'random', from, until, numOfPoints, keyName: 'random'});
+const numOfData = 10;
+const series_random = new Series({type: 'random', from, until, numOfData, keyName: 'random'});
 console.log(series_random.ratio(params, {keyName: 'light'}));
 
 console.log(series.gaussian());

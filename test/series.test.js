@@ -57,7 +57,7 @@ describe('Series', () => {
         ]),
       }),
       jsc.record({
-        numOfPoints: jsc.oneof([
+        numOfData: jsc.oneof([
           jsc.constant(null),
           jsc.bool,
           jsc.string,
@@ -87,10 +87,10 @@ describe('Series', () => {
 
   describe('_range()', () => {
     test('it should return unix timestamp series', () => {
-      const from        = '2016-01-01T00:00:00Z';
-      const until       = '2016-01-01T01:00:00Z';
-      const interval    = 10 * 60; // seconds
-      const numOfPoints = 5;
+      const from      = '2016-01-01T00:00:00Z';
+      const until     = '2016-01-01T01:00:00Z';
+      const interval  = 10 * 60; // seconds
+      const numOfData = 5;
 
       const outputDefault      = new Series({                    from, until, interval})._range().toJSON();
       const outputMonospaced   = new Series({type: 'monospaced', from, until, interval})._range().toJSON();
@@ -107,8 +107,8 @@ describe('Series', () => {
       expect(outputMonospaced).toEqual(expectedMonospaced);
 
       jsc.assertForall(jsc.unit, () => {
-        const outputRandom = new Series({type: 'random', from, until, numOfPoints})._range();
-        expect(outputRandom.size).toBe(numOfPoints);
+        const outputRandom = new Series({type: 'random', from, until, numOfData})._range();
+        expect(outputRandom.size).toBe(numOfData);
         expect(outputRandom.every((unix) => 1451606400 <= unix && unix <= 1451610000)).toBeTruthy();
         expect(outputRandom).toEqual(outputRandom.sort());
 
@@ -220,10 +220,10 @@ describe('Series', () => {
   });
 
   describe('sin()', () => {
-    const from        = '2016-01-01T00:00:00Z';
-    const until       = '2016-01-01T01:00:00Z';
-    const interval    = 10 * 60; // seconds
-    const numOfPoints = 5;
+    const from      = '2016-01-01T00:00:00Z';
+    const until     = '2016-01-01T01:00:00Z';
+    const interval  = 10 * 60; // seconds
+    const numOfData = 5;
 
     test('it should return sine curve', () => {
       const coefficient   = 2;
@@ -245,7 +245,7 @@ describe('Series', () => {
       expect(outputMonospaced).toEqual(expectedMonospaced);
 
       jsc.assertForall(jsc.unit, () => {
-        const outputRandom = new Series({type: 'random', from, until, numOfPoints})
+        const outputRandom = new Series({type: 'random', from, until, numOfData})
           .sin({coefficient, constant, decimalDigits, period});
         expect(outputRandom.length).toBe(5);
         expect(outputRandom.every(({timestamp, value}) => {
@@ -274,7 +274,7 @@ describe('Series', () => {
       expect(outputMonospaced).toEqual(expectedMonospaced);
 
       jsc.assertForall(jsc.unit, () => {
-        const outputRandom = new Series({type: 'random', from, until, numOfPoints}).sin();
+        const outputRandom = new Series({type: 'random', from, until, numOfData}).sin();
         expect(outputRandom.length).toBe(5);
         expect(outputRandom.every(({timestamp, value}) => {
           return (
@@ -290,10 +290,10 @@ describe('Series', () => {
   });
 
   describe('cos()', () => {
-    const from        = '2016-01-01T00:00:00Z';
-    const until       = '2016-01-01T01:00:00Z';
-    const interval    = 10 * 60; // seconds
-    const numOfPoints = 5;
+    const from      = '2016-01-01T00:00:00Z';
+    const until     = '2016-01-01T01:00:00Z';
+    const interval  = 10 * 60; // seconds
+    const numOfData = 5;
 
     test('it should return cosine curve', () => {
       const coefficient   = 2;
@@ -315,7 +315,7 @@ describe('Series', () => {
       expect(outputMonospaced).toEqual(expectedMonospaced);
 
       jsc.assertForall(jsc.unit, () => {
-        const outputRandom = new Series({type: 'random', from, until, numOfPoints})
+        const outputRandom = new Series({type: 'random', from, until, numOfData})
           .cos({coefficient, constant, decimalDigits, period});
         expect(outputRandom.length).toBe(5);
         expect(outputRandom.every(({timestamp, value}) => {
@@ -344,7 +344,7 @@ describe('Series', () => {
       expect(outputMonospaced).toEqual(expectedMonospaced);
 
       jsc.assertForall(jsc.unit, () => {
-        const outputRandom = new Series({type: 'random', from, until, numOfPoints}).cos();
+        const outputRandom = new Series({type: 'random', from, until, numOfData}).cos();
         expect(outputRandom.length).toBe(5);
         expect(outputRandom.every(({timestamp, value}) => {
           return (
@@ -360,10 +360,10 @@ describe('Series', () => {
   });
 
   test('ratio() should return time series data', () => {
-    const from        = '2016-01-01T00:00:00Z';
-    const until       = '2016-01-01T01:00:00Z';
-    const interval    = 10 * 60; // seconds
-    const numOfPoints = 5;
+    const from      = '2016-01-01T00:00:00Z';
+    const until     = '2016-01-01T01:00:00Z';
+    const interval  = 10 * 60; // seconds
+    const numOfData = 5;
 
     const params = {
       rock    : 2,
@@ -382,7 +382,7 @@ describe('Series', () => {
         );
       })).toBeTruthy();
 
-      const outputRandom = new Series({type: 'random', from, until, numOfPoints}).ratio(params);
+      const outputRandom = new Series({type: 'random', from, until, numOfData}).ratio(params);
       expect(outputRandom.length).toBe(5);
       expect(outputRandom.every(({timestamp, value}) => {
         return (
