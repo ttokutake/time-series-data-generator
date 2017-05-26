@@ -22,7 +22,7 @@ describe('Ratio', () => {
     const inputGenerator = jsc.dict(valueGenerator);
 
     jsc.assertForall(inputGenerator, (input) => {
-      if (is.empty(input) && is.not.string(input) && is.not.array(input)) {
+      if (is.json(input) && is.empty(input)) {
         return true;
       }
       expect(() => Ratio.validate(input)).toThrow(/params/);
