@@ -218,7 +218,75 @@ describe('Series', () => {
     });
   });
 
-  test('cos() should return cosine curve', () => {
+  describe('cos()', () => {
+    const from        = '2016-01-01T00:00:00Z';
+    const until       = '2016-01-01T01:00:00Z';
+    const interval    = 10 * 60; // seconds
+    const numOfPoints = 5;
+
+    test('it should return cosine curve', () => {
+      const keyName       = 'cos';
+      const coefficient   = 2;
+      const constant      = 1;
+      const decimalDigits = 1;
+      const period        = 2 * 60 * 60;
+
+      const outputMonospaced = new Series({from, until, interval})
+        .cos({keyName, coefficient, constant, decimalDigits, period});
+      const expectedMonospaced = [
+        {timestamp: '2016-01-01T00:00:00.000Z', cos: 3   },
+        {timestamp: '2016-01-01T00:10:00.000Z', cos: 2.7 },
+        {timestamp: '2016-01-01T00:20:00.000Z', cos: 2   },
+        {timestamp: '2016-01-01T00:30:00.000Z', cos: 1   },
+        {timestamp: '2016-01-01T00:40:00.000Z', cos: 0   },
+        {timestamp: '2016-01-01T00:50:00.000Z', cos: -0.7},
+        {timestamp: '2016-01-01T01:00:00.000Z', cos: -1  },
+      ];
+      expect(outputMonospaced).toEqual(expectedMonospaced);
+
+      jsc.assertForall(jsc.unit, () => {
+        const outputRandom = new Series({type: 'random', from, until, numOfPoints})
+          .cos({keyName, coefficient, constant, decimalDigits, period});
+        expect(outputRandom.length).toBe(5);
+        expect(outputRandom.every(({timestamp, cos}) => {
+          return (
+            '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z'
+          ) && (
+            -1 <= cos && cos <= 3
+          );
+        })).toBeTruthy();
+
+        return true;
+      });
+    });
+
+    test('it should return cosine curve by default options', () => {
+      const outputMonospaced   = new Series({from, until, interval}).cos();
+      const expectedMonospaced = [
+        {timestamp: '2016-01-01T00:00:00.000Z', value: 1   },
+        {timestamp: '2016-01-01T00:10:00.000Z', value: 0.5 },
+        {timestamp: '2016-01-01T00:20:00.000Z', value: -0.5},
+        {timestamp: '2016-01-01T00:30:00.000Z', value: -1  },
+        {timestamp: '2016-01-01T00:40:00.000Z', value: -0.5},
+        {timestamp: '2016-01-01T00:50:00.000Z', value: 0.5 },
+        {timestamp: '2016-01-01T01:00:00.000Z', value: 1   },
+      ];
+      expect(outputMonospaced).toEqual(expectedMonospaced);
+
+      jsc.assertForall(jsc.unit, () => {
+        const outputRandom = new Series({type: 'random', from, until, numOfPoints}).cos();
+        expect(outputRandom.length).toBe(5);
+        expect(outputRandom.every(({timestamp, value}) => {
+          return (
+            '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z'
+          ) && (
+            -1 <= value && value <= 1
+          );
+        })).toBeTruthy();
+
+        return true;
+      });
+    });
   });
 
   test('ratio() should return time series data', () => {
