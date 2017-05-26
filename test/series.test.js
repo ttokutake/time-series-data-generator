@@ -397,4 +397,142 @@ describe('Series', () => {
       return true;
     });
   });
+
+  describe('gaussian()', () => {
+    test('it should throw Error', () => {
+      const series = new Series();
+
+      const inputGenerator = jsc.oneof([
+        jsc.constant(null),
+        jsc.bool,
+        jsc.number,
+        jsc.string,
+        jsc.array(jsc.json),
+        jsc.fn(jsc.json),
+
+        jsc.record({
+          mean: jsc.oneof([
+            jsc.constant(null),
+            jsc.bool,
+            jsc.string,
+            jsc.array(jsc.json),
+            jsc.dict(jsc.json),
+            jsc.fn(jsc.json),
+          ]),
+        }),
+        jsc.record({
+          variance: jsc.oneof([
+            jsc.constant(null),
+            jsc.bool,
+            jsc.string,
+            jsc.array(jsc.json),
+            jsc.dict(jsc.json),
+            jsc.fn(jsc.json),
+          ]),
+        }),
+        jsc.record({
+          decimalDigits: jsc.oneof([
+            jsc.constant(null),
+            jsc.bool,
+            jsc.string,
+            jsc.array(jsc.json),
+            jsc.dict(jsc.json),
+            jsc.fn(jsc.json),
+          ]),
+        }),
+      ]);
+
+      jsc.assertForall(inputGenerator, (input) => {
+        expect(() => series.gaussian(input)).toThrow(/options/);
+
+        return true;
+      });
+    });
+
+    test('it should return time series data with 1', () => {
+      const from      = '2016-01-01T00:00:00Z';
+      const until     = '2016-01-01T01:00:00Z';
+      const interval  = 10 * 60; // seconds
+      const numOfData = 5;
+
+      const mean     = 1;
+      const variance = 0;
+
+      jsc.assertForall(jsc.unit, () => {
+        const outputMonospaced = new Series({from, until, interval}).gaussian({mean, variance});
+        expect(outputMonospaced.length).toBe(7);
+        expect(outputMonospaced.every(({timestamp, value}) => {
+          return (
+            '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z'
+          ) && (
+            value === 1
+          );
+        })).toBeTruthy();
+
+        const outputRandom = new Series({type: 'random', from, until, numOfData}).gaussian({mean, variance});
+        expect(outputRandom.length).toBe(5);
+        expect(outputRandom.every(({timestamp, value}) => {
+          return (
+            '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z'
+          ) && (
+            value === 1
+          );
+        })).toBeTruthy();
+
+        return true;
+      });
+    });
+
+    test('it should return time series numbers with gaussian distribution', () => {
+      const from      = '2016-01-01T00:00:00Z';
+      const until     = '2016-01-01T01:00:00Z';
+      const interval  = 10 * 60; // seconds
+      const numOfData = 5;
+
+      const mean          = 1;
+      const variance      = 0.1;
+      const decimalDigits = 1;
+
+      jsc.assertForall(jsc.unit, () => {
+        const outputMonospaced = new Series({from, until, interval})
+          .gaussian({mean, variance, decimalDigits});
+        expect(outputMonospaced.length).toBe(7);
+        expect(outputMonospaced.every(({timestamp, value}) => {
+          return '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z';
+        })).toBeTruthy();
+
+        const outputRandom = new Series({type: 'random', from, until, numOfData})
+          .gaussian({mean, variance, decimalDigits});
+        expect(outputRandom.length).toBe(5);
+        expect(outputRandom.every(({timestamp, value}) => {
+          return '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z';
+        })).toBeTruthy();
+
+        return true;
+      });
+    });
+
+    test('it should return time series numbers with gaussian distribution by default options', () => {
+      const from      = '2016-01-01T00:00:00Z';
+      const until     = '2016-01-01T01:00:00Z';
+      const interval  = 10 * 60; // seconds
+      const numOfData = 5;
+
+      jsc.assertForall(jsc.unit, () => {
+        const outputMonospaced = new Series({from, until, interval}).gaussian();
+        expect(outputMonospaced.length).toBe(7);
+        expect(outputMonospaced.every(({timestamp, value}) => {
+          return '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z';
+        })).toBeTruthy();
+
+        const outputRandom = new Series({type: 'random', from, until, numOfData}).gaussian();
+        expect(outputRandom.length).toBe(5);
+        expect(outputRandom.every(({timestamp, value}) => {
+          return '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z';
+        })).toBeTruthy();
+
+        return true;
+      });
+    });
+  });
 });
