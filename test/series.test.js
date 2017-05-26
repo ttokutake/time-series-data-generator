@@ -80,8 +80,8 @@ describe('Series', () => {
     const interval    = 10 * 60; // seconds
     const numOfPoints = 5;
 
-    const resultDefault      = new Series({                    from, until, interval})._range().toJSON();
-    const resultMonospaced   = new Series({type: 'monospaced', from, until, interval})._range().toJSON();
+    const outputDefault      = new Series({                    from, until, interval})._range().toJSON();
+    const outputMonospaced   = new Series({type: 'monospaced', from, until, interval})._range().toJSON();
     const expectedMonospaced = [
       1451606400,
       1451607000,
@@ -91,14 +91,14 @@ describe('Series', () => {
       1451609400,
       1451610000,
     ];
-    expect(resultDefault   ).toEqual(expectedMonospaced);
-    expect(resultMonospaced).toEqual(expectedMonospaced);
+    expect(outputDefault   ).toEqual(expectedMonospaced);
+    expect(outputMonospaced).toEqual(expectedMonospaced);
 
     jsc.assertForall(jsc.constant(from), jsc.constant(until), jsc.constant(numOfPoints), (from, until, numOfPoints) => {
-      const resultRandom = new Series({type: 'random', from, until, numOfPoints})._range();
-      expect(resultRandom.size).toBe(numOfPoints);
-      expect(resultRandom.every((unix) => 1451606400 <= unix && unix <= 1451610000)).toBeTruthy();
-      expect(resultRandom).toEqual(resultRandom.sort());
+      const outputRandom = new Series({type: 'random', from, until, numOfPoints})._range();
+      expect(outputRandom.size).toBe(numOfPoints);
+      expect(outputRandom.every((unix) => 1451606400 <= unix && unix <= 1451610000)).toBeTruthy();
+      expect(outputRandom).toEqual(outputRandom.sort());
 
       return true;
     });
@@ -107,8 +107,8 @@ describe('Series', () => {
   test('_range() should return unix timestamp series by default options', () => {
     MockDate.set('2017-05-26T00:00:00Z');
 
-    const resultDefault      = new Series({                  })._range().toJSON();
-    const resultMonospaced   = new Series({type: 'monospaced'})._range().toJSON();
+    const outputDefault      = new Series(                    )._range().toJSON();
+    const outputMonospaced   = new Series({type: 'monospaced'})._range().toJSON();
     const expectedMonospaced = [
       1495753200,
       1495753500,
@@ -124,20 +124,25 @@ describe('Series', () => {
       1495756500,
       1495756800,
     ];
-    expect(resultDefault   ).toEqual(expectedMonospaced);
-    expect(resultMonospaced).toEqual(expectedMonospaced);
+    expect(outputDefault   ).toEqual(expectedMonospaced);
+    expect(outputMonospaced).toEqual(expectedMonospaced);
 
     jsc.assertForall(jsc.unit, () => {
-      const resultRandom = new Series({type: 'random'})._range();
-      expect(resultRandom.size).toBe(10);
-      expect(resultRandom.every((unix) => 1495753200 <= unix && unix <= 1495756800)).toBeTruthy();
-      expect(resultRandom).toEqual(resultRandom.sort());
+      const outputRandom = new Series({type: 'random'})._range();
+      expect(outputRandom.size).toBe(10);
+      expect(outputRandom.every((unix) => 1495753200 <= unix && unix <= 1495756800)).toBeTruthy();
+      expect(outputRandom).toEqual(outputRandom.sort());
 
       return true;
     });
   });
 
   test('_toElem() should return elem of time series data', () => {
+    const unix    = 1495756800;
+    const keyName = 'some';
+    const value   = 1;
+    const output  = Series._toElem(unix, keyName, value);
+    expect(output).toEqual({timestamp: '2017-05-26T00:00:00.000Z', some: 1});
   });
 
   test('sin() should return sine curve', () => {
