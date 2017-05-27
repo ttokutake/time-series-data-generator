@@ -94,8 +94,8 @@ describe('Series', () => {
 
       const series           = new Series({                    from, until, interval});
       const seriesMonospaced = new Series({type: 'monospaced', from, until, interval});
-      const outputDefault      = series          ._timestamps();
-      const outputMonospaced   = seriesMonospaced._timestamps();
+      const outputDefault      = series          ._timestamps().toJSON();
+      const outputMonospaced   = seriesMonospaced._timestamps().toJSON();
       const expectedMonospaced = [
         1451606400,
         1451607000,
@@ -111,9 +111,9 @@ describe('Series', () => {
       const seriesRandom = new Series({type: 'random', from, until, numOfData});
       jsc.assertForall(jsc.unit, () => {
         const outputRandom = seriesRandom._timestamps();
-        expect(outputRandom.length).toBe(numOfData);
+        expect(outputRandom.size).toBe(numOfData);
         expect(outputRandom.every((unix) => 1451606400 <= unix && unix <= 1451610000)).toBeTruthy();
-        expect(outputRandom).toEqual(R.sort((x, y) => x - y, outputRandom));
+        expect(outputRandom).toEqual(outputRandom.sort());
 
         return true;
       });
@@ -124,8 +124,8 @@ describe('Series', () => {
 
       const series           = new Series({                  });
       const seriesMonospaced = new Series({type: 'monospaced'});
-      const outputDefault      = series          ._timestamps();
-      const outputMonospaced   = seriesMonospaced._timestamps();
+      const outputDefault      = series          ._timestamps().toJSON();
+      const outputMonospaced   = seriesMonospaced._timestamps().toJSON();
       const expectedMonospaced = [
         1495753200,
         1495753500,
@@ -147,9 +147,9 @@ describe('Series', () => {
       const seriesRandom = new Series({type: 'random'});
       jsc.assertForall(jsc.unit, () => {
         const outputRandom = seriesRandom._timestamps();
-        expect(outputRandom.length).toBe(10);
+        expect(outputRandom.size).toBe(10);
         expect(outputRandom.every((unix) => 1495753200 <= unix && unix <= 1495756800)).toBeTruthy();
-        expect(outputRandom).toEqual(R.sort((x, y) => x - y, outputRandom));
+        expect(outputRandom).toEqual(outputRandom.sort());
 
         return true;
       });
