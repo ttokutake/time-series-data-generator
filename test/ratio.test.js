@@ -1,8 +1,8 @@
 const Ratio = require('../lib/ratio');
 
-const is  = require('is_js');
-const jsc = require('jsverify');
-const R   = require('ramda');
+const {Map} = require('immutable');
+const is    = require('is_js');
+const jsc   = require('jsverify');
 
 const {
   jscPosInteger,
@@ -37,7 +37,7 @@ describe('Ratio', () => {
         return true;
       }
 
-      const candidates = R.keys(input);
+      const candidates = Map(input).keySeq();
       const output     = new Ratio(input).sample();
       return candidates.includes(output);
     });
@@ -66,16 +66,16 @@ describe('Ratio', () => {
 
   test ('this.ranges should be range expression', () => {
     const data = [
-      [{a: 1      }, [[[1, 1], 'a']               ]],
-      [{a: 1, b: 0}, [[[1, 1], 'a']               ]],
-      [{a: 1, b: 1}, [[[1, 1], 'a'], [[2, 2], 'b']]],
-      [{a: 2, b: 1}, [[[1, 2], 'a'], [[3, 3], 'b']]],
-      [{a: 1, b: 2}, [[[1, 1], 'a'], [[2, 3], 'b']]],
+      [{a: 1      }, {a: [1, 1]}           ],
+      [{a: 1, b: 0}, {a: [1, 1]}           ],
+      [{a: 1, b: 1}, {a: [1, 1], b: [2, 2]}],
+      [{a: 2, b: 1}, {a: [1, 2], b: [3, 3]}],
+      [{a: 1, b: 2}, {a: [1, 1], b: [2, 3]}],
     ];
 
     for (const [ratio, expected] of data) {
       const ratioMap = new Ratio(ratio);
-      expect(ratioMap.ranges).toEqual(expected);
+      expect(ratioMap.ranges.toJSON()).toEqual(expected);
     }
   });
 

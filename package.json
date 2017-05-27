@@ -13,8 +13,7 @@
     "jStat": "^1.6.1",
     "mathjs": "^3.13.1",
     "mockdate": "^2.0.1",
-    "moment": "^2.18.1",
-    "ramda": "^0.24.0"
+    "moment": "^2.18.1"
   },
   "devDependencies": {
     "jest": "^19.0.2",
