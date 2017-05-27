@@ -85,7 +85,7 @@ describe('Series', () => {
     });
   });
 
-  describe('_range()', () => {
+  describe('_timestamps()', () => {
     test('it should return unix timestamp series', () => {
       const from      = '2016-01-01T00:00:00Z';
       const until     = '2016-01-01T01:00:00Z';
@@ -94,8 +94,8 @@ describe('Series', () => {
 
       const series           = new Series({                    from, until, interval});
       const seriesMonospaced = new Series({type: 'monospaced', from, until, interval});
-      const outputDefault      = series          ._range();
-      const outputMonospaced   = seriesMonospaced._range();
+      const outputDefault      = series          ._timestamps();
+      const outputMonospaced   = seriesMonospaced._timestamps();
       const expectedMonospaced = [
         1451606400,
         1451607000,
@@ -110,10 +110,10 @@ describe('Series', () => {
 
       const seriesRandom = new Series({type: 'random', from, until, numOfData});
       jsc.assertForall(jsc.unit, () => {
-        const outputRandom = seriesRandom._range();
+        const outputRandom = seriesRandom._timestamps();
         expect(outputRandom.length).toBe(numOfData);
         expect(outputRandom.every((unix) => 1451606400 <= unix && unix <= 1451610000)).toBeTruthy();
-        expect(outputRandom).toEqual(R.sort((a, b) => a - b, outputRandom));
+        expect(outputRandom).toEqual(R.sort((x, y) => x - y, outputRandom));
 
         return true;
       });
@@ -124,8 +124,8 @@ describe('Series', () => {
 
       const series           = new Series({                  });
       const seriesMonospaced = new Series({type: 'monospaced'});
-      const outputDefault      = series          ._range();
-      const outputMonospaced   = seriesMonospaced._range();
+      const outputDefault      = series          ._timestamps();
+      const outputMonospaced   = seriesMonospaced._timestamps();
       const expectedMonospaced = [
         1495753200,
         1495753500,
@@ -146,10 +146,10 @@ describe('Series', () => {
 
       const seriesRandom = new Series({type: 'random'});
       jsc.assertForall(jsc.unit, () => {
-        const outputRandom = seriesRandom._range();
+        const outputRandom = seriesRandom._timestamps();
         expect(outputRandom.length).toBe(10);
         expect(outputRandom.every((unix) => 1495753200 <= unix && unix <= 1495756800)).toBeTruthy();
-        expect(outputRandom).toEqual(R.sort((a, b) => a - b, outputRandom));
+        expect(outputRandom).toEqual(R.sort((x, y) => x - y, outputRandom));
 
         return true;
       });
