@@ -156,14 +156,6 @@ describe('Series', () => {
     });
   });
 
-  test('_toElem() should return elem of time series data', () => {
-    const series = new Series({keyName: 'some'});
-    const unix   = 1495756800;
-    const value  = 1;
-    const output = series._toElem(unix, value);
-    expect(output).toEqual({timestamp: '2017-05-26T00:00:00.000Z', some: 1});
-  });
-
   describe('_trigonometric()', () => {
     test('they should throw Error', () => {
       const series = new Series();
