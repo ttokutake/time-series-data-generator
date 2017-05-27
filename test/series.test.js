@@ -1,8 +1,8 @@
 const Series = require('../lib/series');
 
-const {List}   = require('immutable');
 const jsc      = require('jsverify');
 const MockDate = require('mockdate');
+const R        = require('ramda');
 
 describe('Series', () => {
   afterEach(() => {
@@ -94,8 +94,8 @@ describe('Series', () => {
 
       const series           = new Series({                    from, until, interval});
       const seriesMonospaced = new Series({type: 'monospaced', from, until, interval});
-      const outputDefault      = series          ._range().toJSON();
-      const outputMonospaced   = seriesMonospaced._range().toJSON();
+      const outputDefault      = series          ._range();
+      const outputMonospaced   = seriesMonospaced._range();
       const expectedMonospaced = [
         1451606400,
         1451607000,
@@ -111,9 +111,9 @@ describe('Series', () => {
       const seriesRandom = new Series({type: 'random', from, until, numOfData});
       jsc.assertForall(jsc.unit, () => {
         const outputRandom = seriesRandom._range();
-        expect(outputRandom.size).toBe(numOfData);
+        expect(outputRandom.length).toBe(numOfData);
         expect(outputRandom.every((unix) => 1451606400 <= unix && unix <= 1451610000)).toBeTruthy();
-        expect(outputRandom).toEqual(outputRandom.sort());
+        expect(outputRandom).toEqual(R.sort((a, b) => a - b, outputRandom));
 
         return true;
       });
@@ -124,8 +124,8 @@ describe('Series', () => {
 
       const series           = new Series({                  });
       const seriesMonospaced = new Series({type: 'monospaced'});
-      const outputDefault      = series          ._range().toJSON();
-      const outputMonospaced   = seriesMonospaced._range().toJSON();
+      const outputDefault      = series          ._range();
+      const outputMonospaced   = seriesMonospaced._range();
       const expectedMonospaced = [
         1495753200,
         1495753500,
@@ -147,9 +147,9 @@ describe('Series', () => {
       const seriesRandom = new Series({type: 'random'});
       jsc.assertForall(jsc.unit, () => {
         const outputRandom = seriesRandom._range();
-        expect(outputRandom.size).toBe(10);
+        expect(outputRandom.length).toBe(10);
         expect(outputRandom.every((unix) => 1495753200 <= unix && unix <= 1495756800)).toBeTruthy();
-        expect(outputRandom).toEqual(outputRandom.sort());
+        expect(outputRandom).toEqual(R.sort((a, b) => a - b, outputRandom));
 
         return true;
       });
@@ -391,7 +391,7 @@ describe('Series', () => {
         return (
           '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z'
         ) && (
-          List(['rock', 'scissors', 'paper']).includes(value)
+          ['rock', 'scissors', 'paper'].includes(value)
         );
       })).toBeTruthy();
 
@@ -401,7 +401,7 @@ describe('Series', () => {
         return (
           '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z'
         ) && (
-          List(['rock', 'scissors', 'paper']).includes(value)
+          ['rock', 'scissors', 'paper'].includes(value)
         );
       })).toBeTruthy();
 

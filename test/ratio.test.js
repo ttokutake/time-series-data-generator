@@ -1,8 +1,8 @@
 const Ratio = require('../lib/ratio');
 
-const {Map} = require('immutable');
-const is    = require('is_js');
-const jsc   = require('jsverify');
+const is  = require('is_js');
+const jsc = require('jsverify');
+const R   = require('ramda');
 
 const {
   jscPosInteger,
@@ -37,7 +37,7 @@ describe('Ratio', () => {
         return true;
       }
 
-      const candidates = Map(input).keySeq();
+      const candidates = R.keys(input);
       const output     = new Ratio(input).sample();
       return candidates.includes(output);
     });
