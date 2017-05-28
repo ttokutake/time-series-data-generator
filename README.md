@@ -52,8 +52,20 @@ $ yarn add https://github.com/ttokutake/time-series-data-generator
 
 ## APIs
 
-1. `sin()`
-2. `cos()`
-3. `gaussian()`
-4. `ratio()`
-5. `generate()`
+```
+Series
+  - constructor(options)
+    - options: Object {
+      type     : 'monospaced' or 'random'                                        , // default 'monospaced'
+      from     : Integer(UNIX timestamp without milliseconds) or String(RFC 3339), // default now - 1 hour
+      until    : Integer(UNIX timestamp without milliseconds) or String(RFC 3339), // default now
+      interval : Positive Integer(seconds)                                       , // default 5 * 60
+      numOfData: Non Negative Integer                                            , // default 10
+      keyName  : String                                                          , // default 'value'
+    }
+  - sin(options)
+  - cos(options)
+  - gaussian(options)
+  - ratio(params)
+  - generate(function)
+```
