@@ -64,7 +64,14 @@ Series
       keyName  : String                                                          , // default 'value'
     }
   - sin(options)
+    - options: Object {
+      coefficient  : Number                   ; coffiecient * sin(t)                    , // default 1
+      constant     : Number                   ; sin(t) + constant                       , // default 0
+      decimalDigits: Integer(0 <= 10)         ; number of decimal digits of result value, // default 2,
+      period       : Positive Integer(seconds); period of sine curve                    , // default 1 * 60 * 60
+    }
   - cos(options)
+    - options: Object(same as sin())
   - gaussian(options)
   - ratio(params)
   - generate(function)
