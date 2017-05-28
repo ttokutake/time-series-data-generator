@@ -56,12 +56,12 @@ $ yarn add https://github.com/ttokutake/time-series-data-generator
 Series
   - constructor(options)
     - options: Object {
-      type     : 'monospaced' or 'random'                                        , // default 'monospaced'
-      from     : Integer(UNIX timestamp without milliseconds) or String(RFC 3339), // default now - 1 hour
-      until    : Integer(UNIX timestamp without milliseconds) or String(RFC 3339), // default now
-      interval : Positive Integer(seconds)                                       , // default 5 * 60
-      numOfData: Non Negative Integer                                            , // default 10
-      keyName  : String                                                          , // default 'value'
+      type     : 'monospaced' or 'random'                                                                        , // default 'monospaced'
+      from     : Integer(UNIX timestamp without milliseconds) or String(RFC 3339)                                , // default now - 1 hour
+      until    : Integer(UNIX timestamp without milliseconds) or String(RFC 3339)                                , // default now
+      interval : Positive Integer(seconds)                                       ; only used on type 'monospaced', // default 5 * 60
+      numOfData: Non Negative Integer                                            ; only used on type 'random'    , // default 10
+      keyName  : String                                                                                          , // default 'value'
     }
   - sin(options)
     - options: Object {
@@ -73,6 +73,13 @@ Series
   - cos(options)
     - options: Object(same as sin())
   - gaussian(options)
+    - options: Object {
+      TBD
+    }
   - ratio(params)
+    - params: Object {
+      TBD
+    }
   - generate(function)
+    - function: Function[(t: Integer(UNIX timestamp without millliseconds)) => any]
 ```
