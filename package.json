@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "doc": "jsdoc",
     "test": "jest"
   },
   "dependencies": {
@@ -17,6 +18,7 @@
   },
   "devDependencies": {
     "jest": "^19.0.2",
+    "jsdoc": "^3.4.3",
     "jsverify": "^0.8.2",
     "mockdate": "^2.0.1"
   }
