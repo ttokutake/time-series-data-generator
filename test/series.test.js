@@ -23,6 +23,7 @@ describe('Series', () => {
           jsc.constant(null),
           jsc.bool,
           jsc.number,
+          jsc.constant('something'),
           jsc.array(jsc.json),
           jsc.dict(jsc.json),
           jsc.fn(jsc.json),
@@ -32,6 +33,8 @@ describe('Series', () => {
         from: jsc.oneof([
           jsc.constant(null),
           jsc.bool,
+          jsc.constant(0.1),
+          jsc.constant('non-date-format'),
           jsc.array(jsc.json),
           jsc.dict(jsc.json),
           jsc.fn(jsc.json),
@@ -41,6 +44,8 @@ describe('Series', () => {
         until: jsc.oneof([
           jsc.constant(null),
           jsc.bool,
+          jsc.constant(0.1),
+          jsc.constant('non-date-format'),
           jsc.array(jsc.json),
           jsc.dict(jsc.json),
           jsc.fn(jsc.json),
@@ -50,6 +55,8 @@ describe('Series', () => {
         interval: jsc.oneof([
           jsc.constant(null),
           jsc.bool,
+          jsc.constant(0),
+          jsc.constant(0.1),
           jsc.string,
           jsc.array(jsc.json),
           jsc.dict(jsc.json),
@@ -60,6 +67,8 @@ describe('Series', () => {
         numOfData: jsc.oneof([
           jsc.constant(null),
           jsc.bool,
+          jsc.constant(-1),
+          jsc.constant(0.1),
           jsc.string,
           jsc.array(jsc.json),
           jsc.dict(jsc.json),
@@ -83,6 +92,58 @@ describe('Series', () => {
 
       return true;
     });
+  });
+
+  test('clone() should return overwrited instance', () => {
+    const original = new Series();
+
+    const changedType = original.clone({type: 'random'});
+    expect(changedType.type                ).toBe('random'                     );
+    expect(changedType.from .unix()        ).toBe(original.from .unix()        );
+    expect(changedType.until.unix()        ).toBe(original.until.unix()        );
+    expect(changedType.interval.asSeconds()).toBe(original.interval.asSeconds());
+    expect(changedType.numOfData           ).toBe(original.numOfData           );
+    expect(changedType.keyName             ).toBe(original.keyName             );
+
+    const changedFrom = original.clone({from: '2016-01-01T00:00:00Z'});
+    expect(changedFrom.type                ).toBe(original.type                );
+    expect(changedFrom.from .unix()        ).toBe(1451606400                   );
+    expect(changedFrom.until.unix()        ).toBe(original.until.unix()        );
+    expect(changedFrom.interval.asSeconds()).toBe(original.interval.asSeconds());
+    expect(changedFrom.numOfData           ).toBe(original.numOfData           );
+    expect(changedFrom.keyName             ).toBe(original.keyName             );
+
+    const changedUntil = original.clone({until: '2016-01-01T01:00:00Z'});
+    expect(changedUntil.type                ).toBe(original.type                );
+    expect(changedUntil.from .unix()        ).toBe(original.from .unix()        );
+    expect(changedUntil.until.unix()        ).toBe(1451610000                   );
+    expect(changedUntil.interval.asSeconds()).toBe(original.interval.asSeconds());
+    expect(changedUntil.numOfData           ).toBe(original.numOfData           );
+    expect(changedUntil.keyName             ).toBe(original.keyName             );
+
+    const changedInterval = original.clone({interval: 1});
+    expect(changedInterval.type                ).toBe(original.type        );
+    expect(changedInterval.from .unix()        ).toBe(original.from .unix());
+    expect(changedInterval.until.unix()        ).toBe(original.until.unix());
+    expect(changedInterval.interval.asSeconds()).toBe(1                    );
+    expect(changedInterval.numOfData           ).toBe(original.numOfData   );
+    expect(changedInterval.keyName             ).toBe(original.keyName     );
+
+    const changedNumOfData = original.clone({numOfData: 100});
+    expect(changedNumOfData.type                ).toBe(original.type                );
+    expect(changedNumOfData.from .unix()        ).toBe(original.from .unix()        );
+    expect(changedNumOfData.until.unix()        ).toBe(original.until.unix()        );
+    expect(changedNumOfData.interval.asSeconds()).toBe(original.interval.asSeconds());
+    expect(changedNumOfData.numOfData           ).toBe(100                          );
+    expect(changedNumOfData.keyName             ).toBe(original.keyName             );
+
+    const changedKeyName = original.clone({keyName: 'something'});
+    expect(changedKeyName.type                ).toBe(original.type                );
+    expect(changedKeyName.from .unix()        ).toBe(original.from .unix()        );
+    expect(changedKeyName.until.unix()        ).toBe(original.until.unix()        );
+    expect(changedKeyName.interval.asSeconds()).toBe(original.interval.asSeconds());
+    expect(changedKeyName.numOfData           ).toBe(original.numOfData           );
+    expect(changedKeyName.keyName             ).toBe('something'                  );
   });
 
   describe('_timestamps()', () => {
@@ -192,6 +253,8 @@ describe('Series', () => {
           decimalDigits: jsc.oneof([
             jsc.constant(null),
             jsc.bool,
+            jsc.elements([-1, 11]),
+            jsc.constant(0.1),
             jsc.string,
             jsc.array(jsc.json),
             jsc.dict(jsc.json),
@@ -202,6 +265,8 @@ describe('Series', () => {
           period: jsc.oneof([
             jsc.constant(null),
             jsc.bool,
+            jsc.constant(0),
+            jsc.constant(0.1),
             jsc.string,
             jsc.array(jsc.json),
             jsc.dict(jsc.json),
@@ -437,6 +502,7 @@ describe('Series', () => {
           decimalDigits: jsc.oneof([
             jsc.constant(null),
             jsc.bool,
+            jsc.elements([-1, 11]),
             jsc.string,
             jsc.array(jsc.json),
             jsc.dict(jsc.json),
