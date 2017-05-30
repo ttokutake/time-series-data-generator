@@ -11,7 +11,7 @@ $ npm install -g yarn
 $ yarn add https://github.com/ttokutake/time-series-data-generator
 ```
 
-## Get started
+## Getting started
 
 1. Use simply. This generator outputs sine curve values with timestamps from "now - 1 hour" until now at 5 min interval.
 
@@ -50,36 +50,15 @@ $ yarn add https://github.com/ttokutake/time-series-data-generator
   // => [{ timestamp: '2016-01-01T00:01:43.000Z', value: 0.18 }, { timestamp: '2016-01-01T00:02:19.000Z', value: 0.24 }, ...]
   ```
 
-## APIs
+## Samples for each APIs
 
-```
-Series
-  - constructor(options)
-    - options: Object {
-      type     : 'monospaced' or 'random'                                                                        , // default 'monospaced'
-      from     : Integer(UNIX timestamp without milliseconds) or String(RFC 3339)                                , // default now - 1 hour
-      until    : Integer(UNIX timestamp without milliseconds) or String(RFC 3339)                                , // default now
-      interval : Positive Integer(seconds)                                       ; only used on type 'monospaced', // default 5 * 60
-      numOfData: Non Negative Integer                                            ; only used on type 'random'    , // default 10
-      keyName  : String                                                                                          , // default 'value'
-    }
-  - sin(options)
-    - options: Object {
-      coefficient  : Number                   ; coffiecient * sin(t)                    , // default 1
-      constant     : Number                   ; sin(t) + constant                       , // default 0
-      decimalDigits: Integer(0 <= 10)         ; number of decimal digits of result value, // default 2,
-      period       : Positive Integer(seconds); period of sine curve                    , // default 1 * 60 * 60
-    }
-  - cos(options)
-    - options: Object(same as sin())
-  - gaussian(options)
-    - options: Object {
-      TBD
-    }
-  - ratio(params)
-    - params: Object {
-      TBD
-    }
-  - generate(function)
-    - function: Function[(t: Integer(UNIX timestamp without millliseconds)) => any]
-```
+- `sin()`
+  - TBD
+- `cos()`
+  - TBD
+- `gaussian()`
+  - TBD
+- `ratio()`
+  - TBD
+- `generate()`
+  - TBD
