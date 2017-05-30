@@ -11,24 +11,27 @@ const {
 
 describe('Ratio', () => {
   test('validate() should throw Error', () => {
-    const valueGenerator = jsc.oneof([
-      jsc.constant(null),
-      jsc.bool,
-      jsc.string,
-      jsc.array(jsc.json),
-      jsc.dict(jsc.json),
-      jsc.fn(jsc.json),
-    ]);
-    const inputGenerator = jsc.dict(valueGenerator);
+    const inputs = [
+      null,
+      false,
+      0,
+      0.1,
+      '',
+      [],
+      () => {},
 
-    jsc.assertForall(inputGenerator, (input) => {
-      if (is.json(input) && is.empty(input)) {
-        return true;
-      }
+      {key: null    },
+      {key: false   },
+      {key: 0.1     },
+      {key: ''      },
+      {key: []      },
+      {key: {}      },
+      {key: () => {}},
+    ];
+
+    for (const input of inputs) {
       expect(() => Ratio.validate(input)).toThrow(/params/);
-
-      return true;
-    });
+    };
   });
 
   test('sample() should return some key', () => {

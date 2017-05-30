@@ -8,22 +8,21 @@ const jsc = require('jsverify');
 
 describe('randomInt()', () => {
   test('it should throw Error', () => {
-    const inputGenerator = jsc.oneof([
-      jsc.constant(undefined),
-      jsc.constant(null),
-      jsc.bool,
-      jsc.string,
-      jsc.array(jsc.json),
-      jsc.dict(jsc.json),
-      jsc.fn(jsc.json),
-    ]);
+    const inputs = [
+      undefined,
+      null,
+      false,
+      0.1,
+      '',
+      [],
+      {},
+      () => {},
+    ];
 
-    jsc.assertForall(inputGenerator, (input) => {
+    for (const input of inputs) {
       expect(() => randomInt(input, 0    )).toThrow(/min/);
       expect(() => randomInt(0    , input)).toThrow(/max/);
-
-      return true;
-    });
+    }
   });
 
   test('it should return integer between range of min and max', () => {

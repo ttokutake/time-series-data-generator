@@ -10,88 +10,68 @@ describe('Series', () => {
   });
 
   test('constructor() should throw Error', () => {
-    const inputGenerator = jsc.oneof([
-      jsc.constant(null),
-      jsc.bool,
-      jsc.number,
-      jsc.string,
-      jsc.array(jsc.json),
-      jsc.fn(jsc.json),
+    const inputs = [
+      null,
+      false,
+      0,
+      '',
+      [],
+      {key: undefined},
+      () => {},
 
-      jsc.record({
-        type: jsc.oneof([
-          jsc.constant(null),
-          jsc.bool,
-          jsc.number,
-          jsc.constant('something'),
-          jsc.array(jsc.json),
-          jsc.dict(jsc.json),
-          jsc.fn(jsc.json),
-        ]),
-      }),
-      jsc.record({
-        from: jsc.oneof([
-          jsc.constant(null),
-          jsc.bool,
-          jsc.constant(0.1),
-          jsc.constant('non-date-format'),
-          jsc.array(jsc.json),
-          jsc.dict(jsc.json),
-          jsc.fn(jsc.json),
-        ]),
-      }),
-      jsc.record({
-        until: jsc.oneof([
-          jsc.constant(null),
-          jsc.bool,
-          jsc.constant(0.1),
-          jsc.constant('non-date-format'),
-          jsc.array(jsc.json),
-          jsc.dict(jsc.json),
-          jsc.fn(jsc.json),
-        ]),
-      }),
-      jsc.record({
-        interval: jsc.oneof([
-          jsc.constant(null),
-          jsc.bool,
-          jsc.constant(0),
-          jsc.constant(0.1),
-          jsc.string,
-          jsc.array(jsc.json),
-          jsc.dict(jsc.json),
-          jsc.fn(jsc.json),
-        ]),
-      }),
-      jsc.record({
-        numOfData: jsc.oneof([
-          jsc.constant(null),
-          jsc.bool,
-          jsc.constant(-1),
-          jsc.constant(0.1),
-          jsc.string,
-          jsc.array(jsc.json),
-          jsc.dict(jsc.json),
-          jsc.fn(jsc.json),
-        ]),
-      }),
-      jsc.record({
-        keyName: jsc.oneof([
-          jsc.constant(null),
-          jsc.bool,
-          jsc.number,
-          jsc.array(jsc.json),
-          jsc.dict(jsc.json),
-          jsc.fn(jsc.json),
-        ]),
-      }),
-    ]);
+      {type: null      },
+      {type: false     },
+      {type: 0         },
+      {type: 'non-enum'},
+      {type: []        },
+      {type: {}        },
+      {type: () => {}  },
 
-    jsc.assertForall(inputGenerator, (input) => {
+      {from: null      },
+      {from: false     },
+      {from: 0.1       },
+      {from: 'non-date'},
+      {from: []        },
+      {from: {}        },
+      {from: () => {}  },
+
+      {until: null      },
+      {until: false     },
+      {until: 0.1       },
+      {until: 'non-date'},
+      {until: []        },
+      {until: {}        },
+      {until: () => {}  },
+
+      {interval: null    },
+      {interval: false   },
+      {interval: 0       },
+      {interval: 0.1     },
+      {interval: ''      },
+      {interval: []      },
+      {interval: {}      },
+      {interval: () => {}},
+
+      {interval: null    },
+      {interval: false   },
+      {interval: -1      },
+      {interval: 0.1     },
+      {interval: ''      },
+      {interval: []      },
+      {interval: {}      },
+      {interval: () => {}},
+
+      {interval: null    },
+      {interval: false   },
+      {interval: 0       },
+      {interval: []      },
+      {interval: {}      },
+      {interval: () => {}},
+    ];
+
+    for (const input of inputs) {
       expect(() => new Series(input)).toThrow(/options/);
-
-      return true;
-    });
+    }
   });
 
   test('clone() should return overwrited instance', () => {
@@ -221,66 +201,53 @@ describe('Series', () => {
     test('they should throw Error', () => {
       const series = new Series();
 
-      const inputGenerator = jsc.oneof([
-        jsc.constant(null),
-        jsc.bool,
-        jsc.number,
-        jsc.string,
-        jsc.array(jsc.json),
-        jsc.fn(jsc.json),
+      const inputs = [
+        null,
+        false,
+        0,
+        '',
+        [],
+        {key: undefined},
+        () => {},
 
-        jsc.record({
-          coefficient: jsc.oneof([
-            jsc.constant(null),
-            jsc.bool,
-            jsc.string,
-            jsc.array(jsc.json),
-            jsc.dict(jsc.json),
-            jsc.fn(jsc.json),
-          ]),
-        }),
-        jsc.record({
-          constant: jsc.oneof([
-            jsc.constant(null),
-            jsc.bool,
-            jsc.string,
-            jsc.array(jsc.json),
-            jsc.dict(jsc.json),
-            jsc.fn(jsc.json),
-          ]),
-        }),
-        jsc.record({
-          decimalDigits: jsc.oneof([
-            jsc.constant(null),
-            jsc.bool,
-            jsc.elements([-1, 11]),
-            jsc.constant(0.1),
-            jsc.string,
-            jsc.array(jsc.json),
-            jsc.dict(jsc.json),
-            jsc.fn(jsc.json),
-          ]),
-        }),
-        jsc.record({
-          period: jsc.oneof([
-            jsc.constant(null),
-            jsc.bool,
-            jsc.constant(0),
-            jsc.constant(0.1),
-            jsc.string,
-            jsc.array(jsc.json),
-            jsc.dict(jsc.json),
-            jsc.fn(jsc.json),
-          ]),
-        }),
-      ]);
+        {coefficient: null    },
+        {coefficient: false   },
+        {coefficient: ''      },
+        {coefficient: []      },
+        {coefficient: {}      },
+        {coefficient: () => {}},
 
-      jsc.assertForall(inputGenerator, (input) => {
+        {constant: null    },
+        {constant: false   },
+        {constant: ''      },
+        {constant: []      },
+        {constant: {}      },
+        {constant: () => {}},
+
+        {decimalDigits: null    },
+        {decimalDigits: false   },
+        {decimalDigits: -1      },
+        {decimalDigits: 11      },
+        {decimalDigits: 0.1     },
+        {decimalDigits: ''      },
+        {decimalDigits: []      },
+        {decimalDigits: {}      },
+        {decimalDigits: () => {}},
+
+        {period: null    },
+        {period: false   },
+        {period: 0       },
+        {period: 0.1     },
+        {period: ''      },
+        {period: []      },
+        {period: {}      },
+        {period: () => {}},
+      ];
+
+      for (const input of inputs) {
         expect(() => series.sin(input)).toThrow(/options/);
         expect(() => series.cos(input)).toThrow(/options/);
-
-        return true;
-      });
+      }
     });
 
     describe('sin()', () => {
@@ -470,52 +437,43 @@ describe('Series', () => {
     test('it should throw Error', () => {
       const series = new Series();
 
-      const inputGenerator = jsc.oneof([
-        jsc.constant(null),
-        jsc.bool,
-        jsc.number,
-        jsc.string,
-        jsc.array(jsc.json),
-        jsc.fn(jsc.json),
+      const inputs = [
+        null,
+        false,
+        0,
+        '',
+        [],
+        {key: undefined},
+        () => {},
 
-        jsc.record({
-          mean: jsc.oneof([
-            jsc.constant(null),
-            jsc.bool,
-            jsc.string,
-            jsc.array(jsc.json),
-            jsc.dict(jsc.json),
-            jsc.fn(jsc.json),
-          ]),
-        }),
-        jsc.record({
-          variance: jsc.oneof([
-            jsc.constant(null),
-            jsc.bool,
-            jsc.string,
-            jsc.array(jsc.json),
-            jsc.dict(jsc.json),
-            jsc.fn(jsc.json),
-          ]),
-        }),
-        jsc.record({
-          decimalDigits: jsc.oneof([
-            jsc.constant(null),
-            jsc.bool,
-            jsc.elements([-1, 11]),
-            jsc.string,
-            jsc.array(jsc.json),
-            jsc.dict(jsc.json),
-            jsc.fn(jsc.json),
-          ]),
-        }),
-      ]);
+        {mean: null    },
+        {mean: false   },
+        {mean: ''      },
+        {mean: []      },
+        {mean: {}      },
+        {mean: () => {}},
 
-      jsc.assertForall(inputGenerator, (input) => {
+        {variance: null    },
+        {variance: false   },
+        {variance: ''      },
+        {variance: []      },
+        {variance: {}      },
+        {variance: () => {}},
+
+        {decimalDigits: null    },
+        {decimalDigits: false   },
+        {decimalDigits: -1      },
+        {decimalDigits: 11      },
+        {decimalDigits: 0.1     },
+        {decimalDigits: ''      },
+        {decimalDigits: []      },
+        {decimalDigits: {}      },
+        {decimalDigits: () => {}},
+      ];
+
+      for (const input of inputs) {
         expect(() => series.gaussian(input)).toThrow(/options/);
-
-        return true;
-      });
+      }
     });
 
     const from      = '2016-01-01T00:00:00Z';
