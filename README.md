@@ -52,7 +52,7 @@ $ yarn add https://github.com/ttokutake/time-series-data-generator
 
 ## Examples for each APIs
 
-- `sin()`
+- `sin()`: Describing sine curve.
   ```js
   const Series = require('time-series-data-generator');
 
@@ -68,7 +68,7 @@ $ yarn add https://github.com/ttokutake/time-series-data-generator
   // => [{timestamp: '2017-05-31T02:17:23.000Z', value: 1.969}, {timestamp: '2017-05-31T02:22:23.000Z', value: 1.716}, ...]
 
   ```
-- `cos()`
+- `cos()`: Describing cosine curve.
   ```js
   const Series = require('time-series-data-generator');
 
@@ -84,7 +84,7 @@ $ yarn add https://github.com/ttokutake/time-series-data-generator
   // => [{timestamp: '2017-05-31T02:20:48.000Z', value: 0.429}, {timestamp: '2017-05-31T02:25:48.000Z', value: 0.095}, ...]
 
   ```
-- `gaussian()`
+- `gaussian()`: Plotting numbers with normal distribution.
   ```js
   const Series = require('time-series-data-generator');
 
@@ -99,7 +99,7 @@ $ yarn add https://github.com/ttokutake/time-series-data-generator
   // => [{timestamp: '2017-05-31T02:25:38.000Z', value: 2.56}, {timestamp: '2017-05-31T02:30:38.000Z', value: 5.924}, ...]
 
   ```
-- `ratio()`
+- `ratio()`: Sampling strings following theirs weights.
   ```js
   const Series = require('time-series-data-generator');
 
@@ -113,7 +113,7 @@ $ yarn add https://github.com/ttokutake/time-series-data-generator
   // => [{timestamp: '2017-05-31T02:30:25.000Z', value: 'rock'}, {timestamp: '2017-05-31T02:37:31.000Z', value: 'scissors'}, ...]
 
   ```
-- `generate()`
+- `generate()`: General function.
   ```js
   const Series = require('time-series-data-generator');
 
