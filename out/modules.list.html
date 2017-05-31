@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>DocStrap Source: random.js</title>
+	<title>DocStrap Modules</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -60,61 +60,93 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: random.js</h1>
-    
+	<h1 class="page-title">Modules</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript linenums">/**
- * Random module.
- * @module lib/random
- */
 
-const is   = require('is_js');
-const math = require('mathjs');
+<header>
+    
+        <h2>
+        
+        </h2>
+        
+    
+</header>
 
-/**
- * Sets a random seed.
- * @param {any} v - Any value to seed pseudo random number generation.
- *   Setting null is equals to seeding the pseudo random number generator with a random seed.
- * @example
- * seed(0);
- */
-module.exports.seed = (v) => {
-  math.config({randomSeed: v});
-}
 
-/**
- * Returns a random integer. But returns null if min > mix.
- * @param {integer} min - Lower bound of random integer's range.
- * @param {integer} max - Upper bound of random integer's range.
- * @return {integer|null}
- * @example
- * randomInt(0, 5); // => 0 ~ 5
- * randomInt(5, 0); // => null
- */
-module.exports.randomInt = (min, max) => {
-  if (is.not.integer(min)) {
-    throw new Error('1st argument(min) must be integer');
-  }
-  if (is.not.integer(max)) {
-    throw new Error('2nd argument(max) must be integer');
-  }
+<article>
+    <div class="container-overview">
+    
+        
 
-  if (min > max) {
-    return null;
-  }
-  return math.randomInt(min, max + 1);
-}
-</pre>
-    </article>
+        
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -124,6 +156,10 @@ module.exports.randomInt = (min, max) => {
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>
