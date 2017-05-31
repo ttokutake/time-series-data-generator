@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "doc": "jsdoc -c ./node_modules/ink-docstrap/template/jsdoc.conf.json -t ./node_modules/ink-docstrap/template -R ./README.md -r ./lib",
+    "doc": "jsdoc -c ./doc.conf.json",
     "test": "jest"
   },
   "dependencies": {

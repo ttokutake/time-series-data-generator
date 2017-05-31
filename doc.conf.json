@@ -1,0 +1,35 @@
+{
+  "tags": {
+    "allowUnknownTags": true
+  },
+  "source": {
+    "include": ["./lib"]
+  },
+  "opts": {
+    "template": "./node_modules/ink-docstrap/template",
+    "readme": "./README.md"
+  },
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "templates": {
+    "logoFile": "",
+    "cleverLinks": false,
+    "monospaceLinks": false,
+    "dateFormat": "ddd MMM Do YYYY",
+    "outputSourceFiles": true,
+    "outputSourcePath": true,
+    "systemName": "Time Series Data Generator",
+    "footer": "",
+    "copyright": "Copyright © 2017 ttokutake",
+    "navType": "vertical",
+    "theme": "simplex",
+    "linenums": true,
+    "collapseSymbols": false,
+    "inverseNav": true
+  },
+  "markdown": {
+    "parser": "gfm",
+    "hardwrap": true
+  }
+}
