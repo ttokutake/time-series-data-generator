@@ -10,7 +10,7 @@ const {
 } = require('./util');
 
 describe('Ratio', () => {
-  test('validate() should throw Error', () => {
+  test('constructor() should throw Error', () => {
     const inputs = [
       null,
       false,
@@ -30,7 +30,7 @@ describe('Ratio', () => {
     ];
 
     for (const input of inputs) {
-      expect(() => Ratio.validate(input)).toThrow(/params/);
+      expect(() => new Ratio(input)).toThrow(/params/);
     };
   });
 
