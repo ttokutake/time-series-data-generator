@@ -197,10 +197,26 @@ describe('Series', () => {
     });
   });
 
+  test('generate() should throw Error', () => {
+    const series = new Series();
+    const inputs = [
+      undefined,
+      null,
+      false,
+      0,
+      '',
+      [],
+      {},
+    ];
+
+    for (const input of inputs) {
+      expect(() => series.generate(input)).toThrow(/func/);
+    }
+  });
+
   describe('_trigonometric()', () => {
     test('they should throw Error', () => {
       const series = new Series();
-
       const inputs = [
         null,
         false,
@@ -393,50 +409,9 @@ describe('Series', () => {
     });
   });
 
-  test('ratio() should return time series data', () => {
-    const from      = '2016-01-01T00:00:00Z';
-    const until     = '2016-01-01T01:00:00Z';
-    const interval  = 10 * 60; // seconds
-    const numOfData = 5;
-
-    const series       = new Series({from, until, interval});
-    const seriesRandom = new Series({type: 'random', from, until, numOfData});
-
-    const params = {
-      rock    : 2,
-      scissors: 2,
-      paper   : 1,
-    };
-
-    jsc.assertForall(jsc.unit, () => {
-      const outputMonospaced = series.ratio(params);
-      expect(outputMonospaced.length).toBe(7);
-      expect(outputMonospaced.every(({timestamp, value}) => {
-        return (
-          '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z'
-        ) && (
-          ['rock', 'scissors', 'paper'].includes(value)
-        );
-      })).toBeTruthy();
-
-      const outputRandom = seriesRandom.ratio(params);
-      expect(outputRandom.length).toBe(5);
-      expect(outputRandom.every(({timestamp, value}) => {
-        return (
-          '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z'
-        ) && (
-          ['rock', 'scissors', 'paper'].includes(value)
-        );
-      })).toBeTruthy();
-
-      return true;
-    });
-  });
-
   describe('gaussian()', () => {
     test('it should throw Error', () => {
       const series = new Series();
-
       const inputs = [
         null,
         false,
@@ -551,6 +526,46 @@ describe('Series', () => {
 
         return true;
       });
+    });
+  });
+
+  test('ratio() should return time series data', () => {
+    const from      = '2016-01-01T00:00:00Z';
+    const until     = '2016-01-01T01:00:00Z';
+    const interval  = 10 * 60; // seconds
+    const numOfData = 5;
+
+    const series       = new Series({from, until, interval});
+    const seriesRandom = new Series({type: 'random', from, until, numOfData});
+
+    const params = {
+      rock    : 2,
+      scissors: 2,
+      paper   : 1,
+    };
+
+    jsc.assertForall(jsc.unit, () => {
+      const outputMonospaced = series.ratio(params);
+      expect(outputMonospaced.length).toBe(7);
+      expect(outputMonospaced.every(({timestamp, value}) => {
+        return (
+          '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z'
+        ) && (
+          ['rock', 'scissors', 'paper'].includes(value)
+        );
+      })).toBeTruthy();
+
+      const outputRandom = seriesRandom.ratio(params);
+      expect(outputRandom.length).toBe(5);
+      expect(outputRandom.every(({timestamp, value}) => {
+        return (
+          '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z'
+        ) && (
+          ['rock', 'scissors', 'paper'].includes(value)
+        );
+      })).toBeTruthy();
+
+      return true;
     });
   });
 });
