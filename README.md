@@ -1,4 +1,4 @@
-# time-series-data-generator
+# time-series-data-generator [![Build Status](https://travis-ci.org/ttokutake/time-series-data-generator.svg?branch=master)](https://travis-ci.org/ttokutake/time-series-data-generator)
 
 Generate time series data for development!
 
