@@ -1,6 +1,6 @@
 # time-series-data-generator
 
-Generate time series data for developers!
+Generate time series data for development!
 
 ## Installation
 
@@ -121,3 +121,7 @@ $ yarn add https://github.com/ttokutake/time-series-data-generator
   console.log(series.generate((unix) => unix));
   // => [{timestamp: '2017-05-31T02:43:57.000Z', value: 1496198637}, {timestamp: '2017-05-31T02:53:07.000Z', value: 1496199187}, ...]
   ```
+
+## API document
+
+https://ttokutake.github.io/time-series-data-generator/
