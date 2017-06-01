@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Time Series Data Generator Source: series.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.simplex.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Time Series Data Generator</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-lib_random.html">lib/random</a></li><li><a href="module-lib_ratio.html">lib/ratio</a></li><li><a href="module-lib_series.html">lib/series</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-lib_ratio-Ratio.html">lib/ratio~Ratio</a></li><li><a href="module-lib_series-Series.html">lib/series~Series</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: series.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/**
+ * Series module.
+ * @module lib/series
+ */
+
+const Ajv     = require('ajv');
+const {Range} = require('immutable');
+const is      = require('is_js');
+const {jStat} = require('jStat');
+const math    = require('mathjs');
+const moment  = require('moment');
+const R       = require('ramda');
+
+const {randomInt} = require('./random');
+const Ratio       = require('./ratio');
+
+/* Enum of Types */
+const TYPE_MONOSPACED = 'monospaced';
+const TYPE_RANDOM     = 'random';
+
+/**
+ * Class generating time series data.
+ * @example
+ * const from     = '2016-01-01T00:00:00Z';
+ * const until    = '2016-01-01T01:00:00Z';
+ * const interval = 5 * 60; // seconds
+ * const keyName  = 'favorite name';
+ * new Series({                    from, until, interval, keyName}); // => Series' instance
+ * new Series({type: 'monospaced', from, until, interval, keyName}); // => same as above
+ * @example
+ * const from      = '2016-01-01T00:00:00Z';
+ * const until     = '2016-01-01T01:00:00Z';
+ * const numOfData = 5 * 60; // seconds
+ * const keyName   = 'favorite name';
+ * new Series({type: 'random', from, until, numOfData, keyName}); // => Series' instance
+ */
+class Series {
+  /**
+   * Create a series.
+   * @param {Object}           [options={}]
+   * @param {(integer|string)} [options.type='monospaced']   - 'monospaced' or 'random'.
+   * @param {(integer|string)} [options.from=&lt;now - 1 hour>] - Lower bound of date range.
+   * @param {string}           [options.until=&lt;now>]         - Upper bound of date range.
+   * @param {integer}          [options.interval=5 * 60]     - ('monospaced' only) Intervel of seconds between two data. [1 &lt;= interval]
+   * @param {integer}          [options.numOfData=10]        - ('random' only) Number of data. [0 &lt;= numOfData]
+   * @param {string}           [options.keyName='value']     - Value's key name of result.
+   */
+  constructor(options = {}) {
+    const now      = moment().startOf('second');
+    const defaults = {
+      type     : TYPE_MONOSPACED,
+      from     : moment(now).subtract(1, 'hour').toISOString(),
+      until    : now.toISOString(),
+      interval : 5 * 60, // seconds
+      numOfData: 10,
+      keyName  : 'value',
+    };
+    const schema = {
+      $schema   : 'http://json-schema.org/schema#',
+      type      : 'object',
+      properties: {
+        type     : {type: 'string', enum: [TYPE_MONOSPACED, TYPE_RANDOM], default: defaults.type},
+        from     : {type: ['integer', 'string'], format: 'date-time', default: defaults.from },
+        until    : {type: ['integer', 'string'], format: 'date-time', default: defaults.until},
+        interval : {type: 'integer', minimum: 1, default: defaults.interval},
+        numOfData: {type: 'integer', minimum: 0, default: defaults.numOfData},
+        keyName  : {type: 'string', default: defaults.keyName},
+      },
+      additionalProperties: false,
+    };
+    const ajv     = new Ajv({useDefaults: true});
+    const isValid = ajv.validate(schema, options);
+    if (!isValid) {
+      const error = ajv.errors[0];
+      throw Error(`options${error.dataPath} ${error.message}`);
+    }
+
+    this.type      = options.type;
+    this.from      = is.integer(options.from ) ? moment.unix(options.from ) : moment(options.from );
+    this.until     = is.integer(options.until) ? moment.unix(options.until) : moment(options.until);
+    this.interval  = moment.duration(options.interval, 'seconds');
+    this.numOfData = options.numOfData;
+    this.keyName   = options.keyName;
+  }
+
+  /**
+   * Clone self instance.
+   * @param {Object}           [options={}]
+   * @param {string}           [options.type=this.type]           - 'monospaced' or 'random'.
+   * @param {(integer|string)} [options.from=this.from]           - Lower bound of date range.
+   * @param {(integer|string)} [options.until=this.until]         - Upper bound of date range.
+   * @param {integer}          [options.interval=this.interval]   - ('monospaced' only) Intervel of seconds between two data. [1 &lt;= interval]
+   * @param {integer}          [options.numOfData=this.numOfData] - ('random' only) Number of data. [0 &lt;= numOfData]
+   * @param {string}           [options.keyName=this.keyName]     - Value's key name of result.
+   * @return {Series}
+   * @example
+   * new Series().clone({keyName: 'changed name'}); // => Series' instance with keyName 'changed name'
+   */
+  clone(options = {}) {
+    const defaults = {
+      type     : this.type,
+      from     : this.from .unix(),
+      until    : this.until.unix(),
+      interval : this.interval.asSeconds(),
+      numOfData: this.numOfData,
+      keyName  : this.keyName,
+    };
+    return new Series(is.json(options) ? R.merge(defaults, options) : options);
+  }
+
+  /**
+   * (Private) Create UNIX timestamps.
+   */
+  _timestamps() {
+    switch (this.type) {
+      case TYPE_MONOSPACED:
+        return Range(this.from.unix(), this.until.unix() + 1, this.interval.asSeconds());
+      case TYPE_RANDOM:
+        const min = this.from .unix();
+        const max = this.until.unix();
+        return Range(0, this.numOfData)
+          .map((x) => randomInt(min, max))
+          .sort();
+      default:
+        assert(false);
+    }
+  }
+
+  /**
+   * Return time series data by any functions using UNIX timestamp.
+   * @param {function} func - (unixTimestamp) => any
+   * @return {Array.&lt;{timestamp: string, (string): any}>}
+   * @example
+   * new Series().generate((unix) => unix); // => [{timestamp: '2017-05-31T02:43:57.000Z', value: 1496198637}, ...]
+   */
+  generate(func) {
+    if (is.not.function(func)) {
+      throw new Error('1st argument(func) must be function');
+    }
+    return this._timestamps()
+      .map((unix) => R.assoc(this.keyName, func(unix), {timestamp: moment.unix(unix).toISOString()}))
+      .toJSON();
+  }
+
+  /**
+   * (Private) Return time series data by trigonometric functions.
+   */
+  _trigonometric(func, options = {}) {
+    const defaults = {
+      coefficient  : 1.0,
+      constant     : 0.0,
+      decimalDigits: 2,
+      period       : 1 * 60 * 60, // seconds
+    };
+    const schema = {
+      $schema   : 'http://json-schema.org/schema#',
+      type      : 'object',
+      properties: {
+        coefficient  : {type: 'number' , default: defaults.coefficient},
+        constant     : {type: 'number' , default: defaults.constant},
+        decimalDigits: {type: 'integer', minimum: 0, maximum: 10, default: defaults.decimalDigits},
+        period       : {type: 'integer', minimum: 1, default: defaults.period},
+      },
+      additionalProperties: false,
+    }
+    const ajv     = new Ajv({useDefaults: true});
+    const isValid = ajv.validate(schema, options);
+    if (!isValid) {
+      const error = ajv.errors[0];
+      throw Error(`options${error.dataPath} ${error.message}`);
+    }
+
+    const scale = 2 * Math.PI / options.period;
+    return this.generate((unix) => {
+      const value = options.coefficient * func(unix * scale) + options.constant;
+      return math.round(value, options.decimalDigits);
+    });
+  }
+
+  /**
+   * Return time series data describing sine curve.
+   * @param {Object}  [options={}]
+   * @param {number}  [options.coefficient=1.0]    - Coefficient of sine curve.
+   * @param {number}  [options.constant=0.0]       - Constant of sine curve.
+   * @param {integer} [options.decimalDigits=2]    - Number of decimal places. [0 &lt;= decimalDigits &lt;= 10]
+   * @param {integer} [options.period=1 * 60 * 60] - Period of sine curve. [1 &lt;= period]
+   * @return {Array.&lt;{timestamp: string, (string): number}>}
+   * @example
+   * const coefficient   = 1;
+   * const constant      = 1;
+   * const decimalDigits = 3;
+   * const period        = 1 * 60 * 60; // seconds
+   * new Series().sin({coefficient, constant, decimalDigits, period})); // => [{timestamp: '2017-05-31T02:17:23.000Z', value: 1.969}, ...]
+   */
+  sin(options) {
+    return this._trigonometric(Math.sin, options);
+  }
+
+  /**
+   * Return time series data describing cosine curve.
+   * @param {Object}  [options={}]
+   * @param {number}  [options.coefficient=1.0]    - Coefficient of cosine curve.
+   * @param {number}  [options.constant=0.0]       - Constant of cosine curve.
+   * @param {integer} [options.decimalDigits=2]    - Number of decimal places. [0 &lt;= decimalDigits &lt;= 10]
+   * @param {integer} [options.period=1 * 60 * 60] - Period of cosine curve. [1 &lt;= period]
+   * @return {Array.&lt;{timestamp: string, (string): number}>}
+   * @example
+   * const coefficient   = 1;
+   * const constant      = 1;
+   * const decimalDigits = 3;
+   * const period        = 1 * 60 * 60; // seconds
+   * new Series().cos({coefficient, constant, decimalDigits, period})); // => [{timestamp: '2017-05-31T02:20:48.000Z', value: 0.429}, ...]
+   */
+  cos(options) {
+    return this._trigonometric(Math.cos, options);
+  }
+
+  /**
+   * Return time series data by normal distribution.
+   * @param {Object}  [options={}]
+   * @param {number}  [options.mean=10]         - Mean of normal distribution.
+   * @param {number}  [options.variance=1]      - Variance of normal distribution.
+   * @param {integer} [options.decimalDigits=2] - Number of decimal places. [0 &lt;= decimalDigits &lt;= 10]
+   * @return {Array.&lt;{timestamp: string, (string): number}>}
+   * @example
+   * const mean          = 5;
+   * const variance      = 1.5;
+   * const decimalDigits = 3;
+   * new Series().gaussian({mean, variance, decimalDigits}); // => [{timestamp: '2017-05-31T02:25:38.000Z', value: 2.56}, ...]
+   */
+  gaussian(options = {}) {
+    const defaults = {
+      mean         : 10.0,
+      variance     : 1.0,
+      decimalDigits: 2,
+    };
+    const schema = {
+      $schema   : 'http://json-schema.org/schema#',
+      type      : 'object',
+      properties: {
+        mean         : {type: 'number', default: defaults.mean},
+        variance     : {type: 'number', default: defaults.variance},
+        decimalDigits: {type: 'integer', minimum: 0, maximum: 10, default: defaults.decimalDigits},
+      },
+      additionalProperties: false,
+    };
+    const ajv     = new Ajv({useDefaults: true});
+    const isValid = ajv.validate(schema, options);
+    if (!isValid) {
+      const error = ajv.errors[0];
+      throw Error(`options${error.dataPath} ${error.message}`);
+    }
+
+    return this.generate((unix) => {
+      const value = jStat.normal.sample(options.mean, options.variance);
+      return math.round(value, options.decimalDigits);
+    });
+  }
+
+  /**
+   * Return time series data by ratio.
+   * @param {Object.&lt;string, integer>} params - Map representing pairs of key and weight.
+   * @return {Array.&lt;{timestamp: string, (string): string}>}
+   * @example
+   * const params = {
+   *   rock    : 1,
+   *   scissors: 2,
+   *   paper   : 1,
+   * };
+   * new Series().ratio(params); // => [{timestamp: '2017-05-31T02:30:25.000Z', value: 'rock'}, ...]
+   */
+  ratio(params) {
+    const ratio = new Ratio(params);
+    return this.generate((_) => ratio.sample());
+  }
+}
+
+module.exports = Series;
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	Copyright © 2017 ttokutake
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
+	
+		on Thu Jun 1st 2017
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>
