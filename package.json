@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "doc": "jsdoc -c ./doc.conf.json",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "dependencies": {
     "ajv": "^5.1.1",
