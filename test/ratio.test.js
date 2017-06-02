@@ -69,8 +69,8 @@ describe('Ratio', () => {
 
   test('this.ranges should be range expression', () => {
     const data = [
-      [{a: 1}, {a: [1, 1]} ],
-      [{a: 1, b: 0}, {a: [1, 1]} ],
+      [{a: 1}, {a: [1, 1]}],
+      [{a: 1, b: 0}, {a: [1, 1]}],
       [{a: 1, b: 1}, {a: [1, 1], b: [2, 2]}],
       [{a: 2, b: 1}, {a: [1, 2], b: [3, 3]}],
       [{a: 1, b: 2}, {a: [1, 1], b: [2, 3]}],
