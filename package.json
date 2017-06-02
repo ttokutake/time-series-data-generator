@@ -10,9 +10,11 @@
     "test": "jest --coverage",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
+  "engines": {
+    "node": "6.x 7.x 8.x"
+  },
   "dependencies": {
     "ajv": "^5.1.1",
-    "coveralls": "^2.13.1",
     "immutable": "^3.8.1",
     "is_js": "^0.9.0",
     "jStat": "^1.6.1",
@@ -21,12 +23,10 @@
     "ramda": "^0.24.0"
   },
   "devDependencies": {
+    "coveralls": "^2.13.1",
     "eslint": "^3.19.0",
-    "eslint-config-airbnb": "^15.0.1",
-    "eslint-plugin-import": "^2.3.0",
     "eslint-plugin-jest": "^20.0.3",
-    "eslint-plugin-jsx-a11y": "^5.0.3",
-    "eslint-plugin-react": "^7.0.1",
+    "eslint-plugin-node": "^4.2.2",
     "express": "^4.15.3",
     "ink-docstrap": "^1.3.0",
     "jest": "^19.0.2",
