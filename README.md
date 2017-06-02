@@ -1,4 +1,7 @@
-# time-series-data-generator [![Build Status](https://travis-ci.org/ttokutake/time-series-data-generator.svg?branch=master)](https://travis-ci.org/ttokutake/time-series-data-generator) [![Coverage Status](https://coveralls.io/repos/github/ttokutake/time-series-data-generator/badge.svg?branch=master)](https://coveralls.io/github/ttokutake/time-series-data-generator?branch=master)
+# time-series-data-generator
+
+[![Build Status](https://travis-ci.org/ttokutake/time-series-data-generator.svg?branch=master)](https://travis-ci.org/ttokutake/time-series-data-generator)
+[![Coverage Status](https://coveralls.io/repos/github/ttokutake/time-series-data-generator/badge.svg?branch=master)](https://coveralls.io/github/ttokutake/time-series-data-generator?branch=master)
 
 Generate time series data for development!
 
