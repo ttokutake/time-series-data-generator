@@ -1,0 +1,9 @@
+# Documents
+doc/
+out/
+doc.conf.json
+doc.js
+
+# Test files
+test/
+coverage/
