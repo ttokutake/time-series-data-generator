@@ -108,12 +108,12 @@ $ yarn add https://github.com/ttokutake/time-series-data-generator
   const Series = require('time-series-data-generator');
 
   const series = new Series({type: 'random'});
-  const params = {
+  const weights = {
     rock    : 1,
     scissors: 2,
     paper   : 1,
   };
-  console.log(series.ratio(params));
+  console.log(series.ratio(weights));
   // => [{timestamp: '2017-05-31T02:30:25.000Z', value: 'rock'}, {timestamp: '2017-05-31T02:37:31.000Z', value: 'scissors'}, ...]
 
   ```

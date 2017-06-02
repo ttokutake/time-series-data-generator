@@ -30,7 +30,7 @@ describe('Ratio', () => {
     ];
 
     for (const input of inputs) {
-      expect(() => new Ratio(input)).toThrow(/params/);
+      expect(() => new Ratio(input)).toThrow(/weights/);
     }
   });
 

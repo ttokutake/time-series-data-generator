@@ -537,14 +537,14 @@ describe('Series', () => {
     const series       = new Series({from, until, interval});
     const seriesRandom = new Series({type: 'random', from, until, numOfData});
 
-    const params = {
+    const weights = {
       rock    : 2,
       scissors: 2,
       paper   : 1,
     };
 
     jsc.assertForall(jsc.unit, () => {
-      const outputMonospaced = series.ratio(params);
+      const outputMonospaced = series.ratio(weights);
       expect(outputMonospaced.length).toBe(7);
       expect(outputMonospaced.every(({timestamp, value}) => {
         return (
@@ -554,7 +554,7 @@ describe('Series', () => {
         );
       })).toBeTruthy();
 
-      const outputRandom = seriesRandom.ratio(params);
+      const outputRandom = seriesRandom.ratio(weights);
       expect(outputRandom.length).toBe(5);
       expect(outputRandom.every(({timestamp, value}) => {
         return (
