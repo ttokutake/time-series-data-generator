@@ -271,7 +271,7 @@ describe('Series', () => {
       const interval  = 10 * 60; // seconds
       const numOfData = 5;
 
-      const series       = new Series({from, until, interval})
+      const series       = new Series({from, until, interval});
       const seriesRandom = new Series({type: 'random', from, until, numOfData});
 
       test('it should return sine curve', () => {

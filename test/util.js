@@ -6,4 +6,4 @@ const jscNonPosInteger = jsc.nat.smap((x) => -x , (x) => -x );
 module.exports = {
   jscPosInteger,
   jscNonPosInteger,
-}
+};
