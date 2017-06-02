@@ -20,8 +20,8 @@ describe('randomInt()', () => {
     ];
 
     for (const input of inputs) {
-      expect(() => randomInt(input, 0    )).toThrow(/min/);
-      expect(() => randomInt(0    , input)).toThrow(/max/);
+      expect(() => randomInt(input, 0 )).toThrow(/min/);
+      expect(() => randomInt(0 , input)).toThrow(/max/);
     }
   });
 

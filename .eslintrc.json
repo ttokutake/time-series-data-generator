@@ -3,9 +3,14 @@
     "node": true,
     "jest/globals": true
   },
-  "plugins": [
-    "node",
-    "jest"
-  ],
-  "extends": ["eslint:recommended", "plugin:node/recommended"]
+  "plugins": ["node", "jest"],
+  "extends": ["eslint:recommended", "plugin:node/recommended"],
+  "rules": {
+    "no-multi-spaces": ["error", {"exceptions": {
+      "ImportDeclaration" : true,
+      "VariableDeclarator": true
+    }}],
+    "object-curly-spacing": [2, "never"],
+    "key-spacing"         : ["error", {"align": "colon"}]
+  }
 }

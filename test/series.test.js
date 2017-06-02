@@ -18,53 +18,53 @@ describe('Series', () => {
       {key: undefined},
       () => {},
 
-      {type: null      },
-      {type: false     },
-      {type: 0         },
+      {type: null},
+      {type: false},
+      {type: 0},
       {type: 'non-enum'},
-      {type: []        },
-      {type: {}        },
-      {type: () => {}  },
+      {type: []},
+      {type: {}},
+      {type: () => {}},
 
-      {from: null      },
-      {from: false     },
-      {from: 0.1       },
+      {from: null},
+      {from: false},
+      {from: 0.1},
       {from: 'non-date'},
-      {from: []        },
-      {from: {}        },
-      {from: () => {}  },
+      {from: []},
+      {from: {}},
+      {from: () => {}},
 
-      {until: null      },
-      {until: false     },
-      {until: 0.1       },
+      {until: null},
+      {until: false},
+      {until: 0.1},
       {until: 'non-date'},
-      {until: []        },
-      {until: {}        },
-      {until: () => {}  },
+      {until: []},
+      {until: {}},
+      {until: () => {}},
 
-      {interval: null    },
-      {interval: false   },
-      {interval: 0       },
-      {interval: 0.1     },
-      {interval: ''      },
-      {interval: []      },
-      {interval: {}      },
+      {interval: null},
+      {interval: false},
+      {interval: 0},
+      {interval: 0.1},
+      {interval: ''},
+      {interval: []},
+      {interval: {}},
       {interval: () => {}},
 
-      {interval: null    },
-      {interval: false   },
-      {interval: -1      },
-      {interval: 0.1     },
-      {interval: ''      },
-      {interval: []      },
-      {interval: {}      },
+      {interval: null},
+      {interval: false},
+      {interval: -1},
+      {interval: 0.1},
+      {interval: ''},
+      {interval: []},
+      {interval: {}},
       {interval: () => {}},
 
-      {interval: null    },
-      {interval: false   },
-      {interval: 0       },
-      {interval: []      },
-      {interval: {}      },
+      {interval: null},
+      {interval: false},
+      {interval: 0},
+      {interval: []},
+      {interval: {}},
       {interval: () => {}},
     ];
 
@@ -77,52 +77,52 @@ describe('Series', () => {
     const original = new Series();
 
     const changedType = original.clone({type: 'random'});
-    expect(changedType.type                ).toBe('random'                     );
-    expect(changedType.from .unix()        ).toBe(original.from .unix()        );
-    expect(changedType.until.unix()        ).toBe(original.until.unix()        );
+    expect(changedType.type ).toBe('random' );
+    expect(changedType.from .unix() ).toBe(original.from .unix() );
+    expect(changedType.until.unix() ).toBe(original.until.unix() );
     expect(changedType.interval.asSeconds()).toBe(original.interval.asSeconds());
-    expect(changedType.numOfData           ).toBe(original.numOfData           );
-    expect(changedType.keyName             ).toBe(original.keyName             );
+    expect(changedType.numOfData ).toBe(original.numOfData );
+    expect(changedType.keyName ).toBe(original.keyName );
 
     const changedFrom = original.clone({from: '2016-01-01T00:00:00Z'});
-    expect(changedFrom.type                ).toBe(original.type                );
-    expect(changedFrom.from .unix()        ).toBe(1451606400                   );
-    expect(changedFrom.until.unix()        ).toBe(original.until.unix()        );
+    expect(changedFrom.type ).toBe(original.type );
+    expect(changedFrom.from .unix() ).toBe(1451606400 );
+    expect(changedFrom.until.unix() ).toBe(original.until.unix() );
     expect(changedFrom.interval.asSeconds()).toBe(original.interval.asSeconds());
-    expect(changedFrom.numOfData           ).toBe(original.numOfData           );
-    expect(changedFrom.keyName             ).toBe(original.keyName             );
+    expect(changedFrom.numOfData ).toBe(original.numOfData );
+    expect(changedFrom.keyName ).toBe(original.keyName );
 
     const changedUntil = original.clone({until: '2016-01-01T01:00:00Z'});
-    expect(changedUntil.type                ).toBe(original.type                );
-    expect(changedUntil.from .unix()        ).toBe(original.from .unix()        );
-    expect(changedUntil.until.unix()        ).toBe(1451610000                   );
+    expect(changedUntil.type ).toBe(original.type );
+    expect(changedUntil.from .unix() ).toBe(original.from .unix() );
+    expect(changedUntil.until.unix() ).toBe(1451610000 );
     expect(changedUntil.interval.asSeconds()).toBe(original.interval.asSeconds());
-    expect(changedUntil.numOfData           ).toBe(original.numOfData           );
-    expect(changedUntil.keyName             ).toBe(original.keyName             );
+    expect(changedUntil.numOfData ).toBe(original.numOfData );
+    expect(changedUntil.keyName ).toBe(original.keyName );
 
     const changedInterval = original.clone({interval: 1});
-    expect(changedInterval.type                ).toBe(original.type        );
-    expect(changedInterval.from .unix()        ).toBe(original.from .unix());
-    expect(changedInterval.until.unix()        ).toBe(original.until.unix());
-    expect(changedInterval.interval.asSeconds()).toBe(1                    );
-    expect(changedInterval.numOfData           ).toBe(original.numOfData   );
-    expect(changedInterval.keyName             ).toBe(original.keyName     );
+    expect(changedInterval.type ).toBe(original.type );
+    expect(changedInterval.from .unix() ).toBe(original.from .unix());
+    expect(changedInterval.until.unix() ).toBe(original.until.unix());
+    expect(changedInterval.interval.asSeconds()).toBe(1 );
+    expect(changedInterval.numOfData ).toBe(original.numOfData );
+    expect(changedInterval.keyName ).toBe(original.keyName );
 
     const changedNumOfData = original.clone({numOfData: 100});
-    expect(changedNumOfData.type                ).toBe(original.type                );
-    expect(changedNumOfData.from .unix()        ).toBe(original.from .unix()        );
-    expect(changedNumOfData.until.unix()        ).toBe(original.until.unix()        );
+    expect(changedNumOfData.type ).toBe(original.type );
+    expect(changedNumOfData.from .unix() ).toBe(original.from .unix() );
+    expect(changedNumOfData.until.unix() ).toBe(original.until.unix() );
     expect(changedNumOfData.interval.asSeconds()).toBe(original.interval.asSeconds());
-    expect(changedNumOfData.numOfData           ).toBe(100                          );
-    expect(changedNumOfData.keyName             ).toBe(original.keyName             );
+    expect(changedNumOfData.numOfData ).toBe(100 );
+    expect(changedNumOfData.keyName ).toBe(original.keyName );
 
     const changedKeyName = original.clone({keyName: 'something'});
-    expect(changedKeyName.type                ).toBe(original.type                );
-    expect(changedKeyName.from .unix()        ).toBe(original.from .unix()        );
-    expect(changedKeyName.until.unix()        ).toBe(original.until.unix()        );
+    expect(changedKeyName.type ).toBe(original.type );
+    expect(changedKeyName.from .unix() ).toBe(original.from .unix() );
+    expect(changedKeyName.until.unix() ).toBe(original.until.unix() );
     expect(changedKeyName.interval.asSeconds()).toBe(original.interval.asSeconds());
-    expect(changedKeyName.numOfData           ).toBe(original.numOfData           );
-    expect(changedKeyName.keyName             ).toBe('something'                  );
+    expect(changedKeyName.numOfData ).toBe(original.numOfData );
+    expect(changedKeyName.keyName ).toBe('something' );
   });
 
   describe('_timestamps()', () => {
@@ -132,9 +132,9 @@ describe('Series', () => {
       const interval  = 10 * 60; // seconds
       const numOfData = 5;
 
-      const series           = new Series({                    from, until, interval});
+      const series           = new Series({from, until, interval});
       const seriesMonospaced = new Series({type: 'monospaced', from, until, interval});
-      const outputDefault      = series          ._timestamps().toJSON();
+      const outputDefault      = series ._timestamps().toJSON();
       const outputMonospaced   = seriesMonospaced._timestamps().toJSON();
       const expectedMonospaced = [
         1451606400,
@@ -145,7 +145,7 @@ describe('Series', () => {
         1451609400,
         1451610000,
       ];
-      expect(outputDefault   ).toEqual(expectedMonospaced);
+      expect(outputDefault ).toEqual(expectedMonospaced);
       expect(outputMonospaced).toEqual(expectedMonospaced);
 
       const seriesRandom = new Series({type: 'random', from, until, numOfData});
@@ -162,9 +162,9 @@ describe('Series', () => {
     test('it should return unix timestamp series by default options', () => {
       MockDate.set('2017-05-26T00:00:00Z');
 
-      const series           = new Series({                  });
+      const series           = new Series({});
       const seriesMonospaced = new Series({type: 'monospaced'});
-      const outputDefault      = series          ._timestamps().toJSON();
+      const outputDefault      = series ._timestamps().toJSON();
       const outputMonospaced   = seriesMonospaced._timestamps().toJSON();
       const expectedMonospaced = [
         1495753200,
@@ -181,7 +181,7 @@ describe('Series', () => {
         1495756500,
         1495756800,
       ];
-      expect(outputDefault   ).toEqual(expectedMonospaced);
+      expect(outputDefault ).toEqual(expectedMonospaced);
       expect(outputMonospaced).toEqual(expectedMonospaced);
 
       const seriesRandom = new Series({type: 'random'});
@@ -225,37 +225,37 @@ describe('Series', () => {
         {key: undefined},
         () => {},
 
-        {coefficient: null    },
-        {coefficient: false   },
-        {coefficient: ''      },
-        {coefficient: []      },
-        {coefficient: {}      },
+        {coefficient: null},
+        {coefficient: false},
+        {coefficient: ''},
+        {coefficient: []},
+        {coefficient: {}},
         {coefficient: () => {}},
 
-        {constant: null    },
-        {constant: false   },
-        {constant: ''      },
-        {constant: []      },
-        {constant: {}      },
+        {constant: null},
+        {constant: false},
+        {constant: ''},
+        {constant: []},
+        {constant: {}},
         {constant: () => {}},
 
-        {decimalDigits: null    },
-        {decimalDigits: false   },
-        {decimalDigits: -1      },
-        {decimalDigits: 11      },
-        {decimalDigits: 0.1     },
-        {decimalDigits: ''      },
-        {decimalDigits: []      },
-        {decimalDigits: {}      },
+        {decimalDigits: null},
+        {decimalDigits: false},
+        {decimalDigits: -1},
+        {decimalDigits: 11},
+        {decimalDigits: 0.1},
+        {decimalDigits: ''},
+        {decimalDigits: []},
+        {decimalDigits: {}},
         {decimalDigits: () => {}},
 
-        {period: null    },
-        {period: false   },
-        {period: 0       },
-        {period: 0.1     },
-        {period: ''      },
-        {period: []      },
-        {period: {}      },
+        {period: null},
+        {period: false},
+        {period: 0},
+        {period: 0.1},
+        {period: ''},
+        {period: []},
+        {period: {}},
         {period: () => {}},
       ];
 
@@ -282,13 +282,13 @@ describe('Series', () => {
 
         const outputMonospaced = series.sin({coefficient, constant, decimalDigits, period});
         const expectedMonospaced = [
-          {timestamp: '2016-01-01T00:00:00.000Z', value: 1  },
-          {timestamp: '2016-01-01T00:10:00.000Z', value: 2  },
+          {timestamp: '2016-01-01T00:00:00.000Z', value: 1},
+          {timestamp: '2016-01-01T00:10:00.000Z', value: 2},
           {timestamp: '2016-01-01T00:20:00.000Z', value: 2.7},
-          {timestamp: '2016-01-01T00:30:00.000Z', value: 3  },
+          {timestamp: '2016-01-01T00:30:00.000Z', value: 3},
           {timestamp: '2016-01-01T00:40:00.000Z', value: 2.7},
-          {timestamp: '2016-01-01T00:50:00.000Z', value: 2  },
-          {timestamp: '2016-01-01T01:00:00.000Z', value: 1  },
+          {timestamp: '2016-01-01T00:50:00.000Z', value: 2},
+          {timestamp: '2016-01-01T01:00:00.000Z', value: 1},
         ];
         expect(outputMonospaced).toEqual(expectedMonospaced);
 
@@ -310,13 +310,13 @@ describe('Series', () => {
       test('it should return sine curve by default options', () => {
         const outputMonospaced   = series.sin();
         const expectedMonospaced = [
-          {timestamp: '2016-01-01T00:00:00.000Z', value: 0    },
-          {timestamp: '2016-01-01T00:10:00.000Z', value: 0.87 },
-          {timestamp: '2016-01-01T00:20:00.000Z', value: 0.87 },
-          {timestamp: '2016-01-01T00:30:00.000Z', value: -0   },
+          {timestamp: '2016-01-01T00:00:00.000Z', value: 0},
+          {timestamp: '2016-01-01T00:10:00.000Z', value: 0.87},
+          {timestamp: '2016-01-01T00:20:00.000Z', value: 0.87},
+          {timestamp: '2016-01-01T00:30:00.000Z', value: -0},
           {timestamp: '2016-01-01T00:40:00.000Z', value: -0.87},
           {timestamp: '2016-01-01T00:50:00.000Z', value: -0.87},
-          {timestamp: '2016-01-01T01:00:00.000Z', value: -0   },
+          {timestamp: '2016-01-01T01:00:00.000Z', value: -0},
         ];
         expect(outputMonospaced).toEqual(expectedMonospaced);
 
@@ -353,13 +353,13 @@ describe('Series', () => {
 
         const outputMonospaced = series.cos({coefficient, constant, decimalDigits, period});
         const expectedMonospaced = [
-          {timestamp: '2016-01-01T00:00:00.000Z', value: 3   },
-          {timestamp: '2016-01-01T00:10:00.000Z', value: 2.7 },
-          {timestamp: '2016-01-01T00:20:00.000Z', value: 2   },
-          {timestamp: '2016-01-01T00:30:00.000Z', value: 1   },
-          {timestamp: '2016-01-01T00:40:00.000Z', value: 0   },
+          {timestamp: '2016-01-01T00:00:00.000Z', value: 3},
+          {timestamp: '2016-01-01T00:10:00.000Z', value: 2.7},
+          {timestamp: '2016-01-01T00:20:00.000Z', value: 2},
+          {timestamp: '2016-01-01T00:30:00.000Z', value: 1},
+          {timestamp: '2016-01-01T00:40:00.000Z', value: 0},
           {timestamp: '2016-01-01T00:50:00.000Z', value: -0.7},
-          {timestamp: '2016-01-01T01:00:00.000Z', value: -1  },
+          {timestamp: '2016-01-01T01:00:00.000Z', value: -1},
         ];
         expect(outputMonospaced).toEqual(expectedMonospaced);
 
@@ -381,13 +381,13 @@ describe('Series', () => {
       test('it should return cosine curve by default options', () => {
         const outputMonospaced   = series.cos();
         const expectedMonospaced = [
-          {timestamp: '2016-01-01T00:00:00.000Z', value: 1   },
-          {timestamp: '2016-01-01T00:10:00.000Z', value: 0.5 },
+          {timestamp: '2016-01-01T00:00:00.000Z', value: 1},
+          {timestamp: '2016-01-01T00:10:00.000Z', value: 0.5},
           {timestamp: '2016-01-01T00:20:00.000Z', value: -0.5},
-          {timestamp: '2016-01-01T00:30:00.000Z', value: -1  },
+          {timestamp: '2016-01-01T00:30:00.000Z', value: -1},
           {timestamp: '2016-01-01T00:40:00.000Z', value: -0.5},
-          {timestamp: '2016-01-01T00:50:00.000Z', value: 0.5 },
-          {timestamp: '2016-01-01T01:00:00.000Z', value: 1   },
+          {timestamp: '2016-01-01T00:50:00.000Z', value: 0.5},
+          {timestamp: '2016-01-01T01:00:00.000Z', value: 1},
         ];
         expect(outputMonospaced).toEqual(expectedMonospaced);
 
@@ -420,28 +420,28 @@ describe('Series', () => {
         {key: undefined},
         () => {},
 
-        {mean: null    },
-        {mean: false   },
-        {mean: ''      },
-        {mean: []      },
-        {mean: {}      },
+        {mean: null},
+        {mean: false},
+        {mean: ''},
+        {mean: []},
+        {mean: {}},
         {mean: () => {}},
 
-        {variance: null    },
-        {variance: false   },
-        {variance: ''      },
-        {variance: []      },
-        {variance: {}      },
+        {variance: null},
+        {variance: false},
+        {variance: ''},
+        {variance: []},
+        {variance: {}},
         {variance: () => {}},
 
-        {decimalDigits: null    },
-        {decimalDigits: false   },
-        {decimalDigits: -1      },
-        {decimalDigits: 11      },
-        {decimalDigits: 0.1     },
-        {decimalDigits: ''      },
-        {decimalDigits: []      },
-        {decimalDigits: {}      },
+        {decimalDigits: null},
+        {decimalDigits: false},
+        {decimalDigits: -1},
+        {decimalDigits: 11},
+        {decimalDigits: 0.1},
+        {decimalDigits: ''},
+        {decimalDigits: []},
+        {decimalDigits: {}},
         {decimalDigits: () => {}},
       ];
 

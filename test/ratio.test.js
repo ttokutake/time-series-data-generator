@@ -20,12 +20,12 @@ describe('Ratio', () => {
       [],
       () => {},
 
-      {key: null    },
-      {key: false   },
-      {key: 0.1     },
-      {key: ''      },
-      {key: []      },
-      {key: {}      },
+      {key: null},
+      {key: false},
+      {key: 0.1},
+      {key: ''},
+      {key: []},
+      {key: {}},
       {key: () => {}},
     ];
 
@@ -69,8 +69,8 @@ describe('Ratio', () => {
 
   test('this.ranges should be range expression', () => {
     const data = [
-      [{a: 1      }, {a: [1, 1]}           ],
-      [{a: 1, b: 0}, {a: [1, 1]}           ],
+      [{a: 1}, {a: [1, 1]} ],
+      [{a: 1, b: 0}, {a: [1, 1]} ],
       [{a: 1, b: 1}, {a: [1, 1], b: [2, 2]}],
       [{a: 2, b: 1}, {a: [1, 2], b: [3, 3]}],
       [{a: 1, b: 2}, {a: [1, 1], b: [2, 3]}],
@@ -84,7 +84,7 @@ describe('Ratio', () => {
 
   test('this.max should be max of range expression', () => {
     const data = [
-      [{a: 1      }, 1],
+      [{a: 1}, 1],
       [{a: 1, b: 0}, 1],
       [{a: 1, b: 1}, 2],
       [{a: 2, b: 1}, 3],
