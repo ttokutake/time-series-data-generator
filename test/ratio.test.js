@@ -31,7 +31,7 @@ describe('Ratio', () => {
 
     for (const input of inputs) {
       expect(() => new Ratio(input)).toThrow(/params/);
-    };
+    }
   });
 
   test('sample() should return some key', () => {
@@ -67,7 +67,7 @@ describe('Ratio', () => {
     });
   });
 
-  test ('this.ranges should be range expression', () => {
+  test('this.ranges should be range expression', () => {
     const data = [
       [{a: 1      }, {a: [1, 1]}           ],
       [{a: 1, b: 0}, {a: [1, 1]}           ],
@@ -82,7 +82,7 @@ describe('Ratio', () => {
     }
   });
 
-  test ('this.max should be max of range expression', () => {
+  test('this.max should be max of range expression', () => {
     const data = [
       [{a: 1      }, 1],
       [{a: 1, b: 0}, 1],

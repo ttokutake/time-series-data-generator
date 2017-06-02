@@ -2,7 +2,6 @@ const Series = require('../lib/series');
 
 const jsc      = require('jsverify');
 const MockDate = require('mockdate');
-const R        = require('ramda');
 
 describe('Series', () => {
   afterEach(() => {
@@ -496,13 +495,13 @@ describe('Series', () => {
       jsc.assertForall(jsc.unit, () => {
         const outputMonospaced = series.gaussian({mean, variance, decimalDigits});
         expect(outputMonospaced.length).toBe(7);
-        expect(outputMonospaced.every(({timestamp, value}) => {
+        expect(outputMonospaced.every(({timestamp}) => {
           return '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z';
         })).toBeTruthy();
 
         const outputRandom = seriesRandom.gaussian({mean, variance, decimalDigits});
         expect(outputRandom.length).toBe(5);
-        expect(outputRandom.every(({timestamp, value}) => {
+        expect(outputRandom.every(({timestamp}) => {
           return '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z';
         })).toBeTruthy();
 
@@ -514,13 +513,13 @@ describe('Series', () => {
       jsc.assertForall(jsc.unit, () => {
         const outputMonospaced = series.gaussian();
         expect(outputMonospaced.length).toBe(7);
-        expect(outputMonospaced.every(({timestamp, value}) => {
+        expect(outputMonospaced.every(({timestamp}) => {
           return '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z';
         })).toBeTruthy();
 
         const outputRandom = seriesRandom.gaussian();
         expect(outputRandom.length).toBe(5);
-        expect(outputRandom.every(({timestamp, value}) => {
+        expect(outputRandom.every(({timestamp}) => {
           return '2016-01-01T00:00:00.000Z' <= timestamp && timestamp <= '2016-01-01T01:00:00.000Z';
         })).toBeTruthy();
 
