@@ -12,6 +12,13 @@
   $ yarn
   ```
 
+## Lint
+
+```bash
+$ yarn lint
+$ yarn fix  # with auto fixing
+```
+
 ## Test
 
 ```bash
