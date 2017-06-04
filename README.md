@@ -12,7 +12,7 @@ Following example uses [yarn](https://yarnpkg.com/lang/en/), but you can also us
 
 ```bash
 $ npm install -g yarn
-$ yarn add https://github.com/ttokutake/time-series-data-generator
+$ yarn add time-series-data-generator
 ```
 
 ## Getting started
