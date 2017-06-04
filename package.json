@@ -3,15 +3,19 @@
   "version": "0.1.0",
   "main": "index.js",
   "license": "MIT",
+  "engines": {
+    "node": "^6.0.0 ^7.0.0 ^8.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ttokutake/time-series-data-generator"
+  },
   "scripts": {
     "doc": "jsdoc -c ./doc.conf.json",
     "lint": "eslint .",
     "fix": "eslint --fix .",
     "test": "jest --coverage",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
-  },
-  "engines": {
-    "node": "^6.0.0 ^7.0.0 ^8.0.0"
   },
   "dependencies": {
     "ajv": "^5.1.1",
