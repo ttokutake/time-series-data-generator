@@ -11,7 +11,7 @@
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "engines": {
-    "node": "6.x 7.x 8.x"
+    "node": "^6.0.0 ^7.0.0 ^8.0.0"
   },
   "dependencies": {
     "ajv": "^5.1.1",
