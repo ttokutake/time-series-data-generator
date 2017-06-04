@@ -1,3 +1,13 @@
+# asdf
+.tool-versions
+
+# ESLint
+.eslintignore
+.eslintrc.json
+
+# Travis CI
+.travis.yml
+
 # Documents
 doc/
 out/
