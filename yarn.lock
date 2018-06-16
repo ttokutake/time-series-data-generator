@@ -595,9 +595,9 @@ commander@^2.9.0:
   dependencies:
     graceful-readlink ">= 1.0.0"
 
-complex.js@2.0.4:
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/complex.js/-/complex.js-2.0.4.tgz#d8e7cfb9652d1e853e723386421c1a0ca7a48373"
+complex.js@2.0.10:
+  version "2.0.10"
+  resolved "https://registry.yarnpkg.com/complex.js/-/complex.js-2.0.10.tgz#afac74e4fb9131e8709f9c300420ce58fa36f18d"
 
 concat-map@0.0.1:
   version "0.0.1"
@@ -715,9 +715,9 @@ decamelize@^1.0.0, decamelize@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
 
-decimal.js@9.0.1:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-9.0.1.tgz#1cc8b228177da7ab6498c1cc06eb130a290e6e1e"
+decimal.js@10.0.1:
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-10.0.1.tgz#d04b16b277f0f9af09671cee225c4882e8857c58"
 
 deep-extend@~0.4.0:
   version "0.4.2"
@@ -867,9 +867,9 @@ escape-html@~1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
 
-escape-latex@1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/escape-latex/-/escape-latex-1.0.0.tgz#74b9e94d8c178645704c33791e95a4155b59718f"
+escape-latex@1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/escape-latex/-/escape-latex-1.1.0.tgz#c0a94a51eb8c73c3a67a95cc90fbb626cef54539"
 
 escape-string-regexp@^1.0.2, escape-string-regexp@^1.0.5, escape-string-regexp@~1.0.5:
   version "1.0.5"
@@ -1223,9 +1223,9 @@ forwarded@~0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.1.0.tgz#19ef9874c4ae1c297bcf078fde63a09b66a84363"
 
-fraction.js@4.0.4:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/fraction.js/-/fraction.js-4.0.4.tgz#04e567110718adf7b52974a10434ab4c67a5183e"
+fraction.js@4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/fraction.js/-/fraction.js-4.0.8.tgz#e53618112e3b36b348c61a81323173bceb01e418"
 
 fresh@0.5.0:
   version "0.5.0"
@@ -2325,18 +2325,18 @@ marked@~0.3.6:
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/marked/-/marked-0.3.6.tgz#b2c6c618fccece4ef86c4fc6cb8a7cbf5aeda8d7"
 
-mathjs@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-4.0.0.tgz#17c95279a6fcd727be6ff4e478d609ee78c25502"
+mathjs@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/mathjs/-/mathjs-5.0.0.tgz#e0ec6ff5d81c56427d111c0c9a73f7ba5c28617d"
   dependencies:
-    complex.js "2.0.4"
-    decimal.js "9.0.1"
-    escape-latex "1.0.0"
-    fraction.js "4.0.4"
+    complex.js "2.0.10"
+    decimal.js "10.0.1"
+    escape-latex "1.1.0"
+    fraction.js "4.0.8"
     javascript-natural-sort "0.7.1"
     seed-random "2.2.0"
     tiny-emitter "2.0.2"
-    typed-function "1.0.1"
+    typed-function "1.0.3"
 
 media-typer@0.3.0:
   version "0.3.0"
@@ -3488,9 +3488,9 @@ type-is@~1.6.15:
     media-typer "0.3.0"
     mime-types "~2.1.15"
 
-typed-function@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/typed-function/-/typed-function-1.0.1.tgz#2fc13787268764cb09633fe57be5bd089180668a"
+typed-function@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/typed-function/-/typed-function-1.0.3.tgz#57026246214b664a5af45ef0a06679f4453bd090"
 
 typedarray@^0.0.6:
   version "0.0.6"
