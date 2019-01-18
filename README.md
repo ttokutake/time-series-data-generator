@@ -8,11 +8,8 @@ Generate time series data for development!
 
 ## Installation
 
-Following example uses [yarn](https://yarnpkg.com/lang/en/), but you can also use [npm](https://www.npmjs.com/).
-
 ```bash
-$ npm install -g yarn
-$ yarn add time-series-data-generator
+$ npm install --save time-series-data-generator
 ```
 
 ## Getting started
