@@ -24,7 +24,7 @@
     "jStat": "^1.6.1",
     "mathjs": "^5.0.0",
     "moment": "^2.18.1",
-    "ramda": "^0.25.0"
+    "ramda": "^0.26.0"
   },
   "devDependencies": {
     "coveralls": "^3.0.0",
