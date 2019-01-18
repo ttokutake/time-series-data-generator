@@ -1,15 +1,13 @@
 language: node_js
 node_js:
   - node
+  - 10
   - 8
-  - 7
-  - 6
-cache: yarn
-before_install: yarn global add greenkeeper-lockfile@1
+before_install: npm install -g greenkeeper-lockfile@1
 before_script: greenkeeper-lockfile-update
 script:
-  - yarn lint
-  - yarn test
+  - npm run lint
+  - npm test
 after_script: greenkeeper-lockfile-upload
 after_success:
-  - yarn coveralls
+  - npm run coveralls
