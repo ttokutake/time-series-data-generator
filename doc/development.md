@@ -6,30 +6,25 @@
   ```bash
   $ asdf install
   ```
-2. [yarn](https://yarnpkg.com/lang/en/): To manage dependencies of JS libraries.
-  ```bash
-  $ npm install -g yarn
-  $ yarn
-  ```
 
 ## Lint
 
 ```bash
-$ yarn lint
-$ yarn fix  # with auto fixing
+$ npm run lint
+$ npm run fix  # with auto fixing
 ```
 
 ## Test
 
 ```bash
-$ yarn test
+$ npm test
 ```
 
 ## Documentation
 
 1. Create API documents.
   ```bash
-  $ yarn doc
+  $ npm run doc
   ```
 2. Run the server serving static files.
   ```bash
