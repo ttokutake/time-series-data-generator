@@ -11,7 +11,6 @@
 
 ```bash
 $ npm run lint
-$ npm run fix  # with auto fixing
 ```
 
 ## Test
