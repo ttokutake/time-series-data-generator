@@ -12,6 +12,9 @@
   },
   "scripts": {
     "doc": "jsdoc -c ./doc.conf.json",
+    "format": "npm run format:base -- --write",
+    "format:ci": "npm run format:base -- --list-different",
+    "format:base": "prettier --ignore-path=.gitignore '**/*.json' '**/*.yml' '**/*.md'",
     "lint": "npm run lint:ci -- --fix",
     "lint:ci": "eslint --ignore-path .gitignore .",
     "test": "jest --coverage",

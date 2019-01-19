@@ -9,9 +9,7 @@
     "template": "./node_modules/ink-docstrap/template",
     "readme": "./README.md"
   },
-  "plugins": [
-    "plugins/markdown"
-  ],
+  "plugins": ["plugins/markdown"],
   "templates": {
     "logoFile": "",
     "cleverLinks": false,
