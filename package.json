@@ -1,14 +1,15 @@
 {
   "name": "time-series-data-generator",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": "index.js",
-  "license": "MIT",
+  "files": [
+    "index.js",
+    "lib",
+    "README.md",
+    "LICENSE"
+  ],
   "engines": {
-    "node": ">=8.0.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ttokutake/time-series-data-generator"
+    "node": ">=6.0.0"
   },
   "scripts": {
     "doc": "npm run doc:build && node doc",
@@ -21,6 +22,16 @@
     "test": "jest --coverage",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ttokutake/time-series-data-generator"
+  },
+  "author": "ttokutake <tadatoshi.tokutake@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ttokutake/time-series-data-generator/issues"
+  },
+  "homepage": "https://github.com/ttokutake/time-series-data-generator#readme",
   "dependencies": {
     "ajv": "^6.4.0",
     "immutable": "^3.8.1",
