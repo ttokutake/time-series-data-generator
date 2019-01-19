@@ -11,7 +11,8 @@
     "url": "https://github.com/ttokutake/time-series-data-generator"
   },
   "scripts": {
-    "doc": "jsdoc -c ./doc.conf.json",
+    "doc": "npm run doc:build && node doc",
+    "doc:build": "jsdoc -c ./doc.conf.json",
     "format": "npm run format:base -- --write",
     "format:ci": "npm run format:base -- --list-different",
     "format:base": "prettier --ignore-path=.gitignore '**/*.json' '**/*.yml' '**/*.md'",
