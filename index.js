@@ -1,1 +1,1 @@
-module.exports = require('./lib/series');
+module.exports = require("./lib/series");
