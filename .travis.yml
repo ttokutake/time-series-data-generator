@@ -3,7 +3,6 @@ node_js:
   - node
   - 10
   - 8
-  - 6
 before_install: npm install -g greenkeeper-lockfile@1
 before_script: greenkeeper-lockfile-update
 script:
